@@ -1,0 +1,292 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+*:focus{
+    outline: none;
+}
+body{
+    padding-top: 60px;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.main-menu{
+    display: flex;
+    align-items: center;
+    position: fixed;
+    z-index: 800;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 60px;
+    background-color: white;
+    justify-content: flex-end;
+    box-shadow: 0px 0px 8px 5px rgba(100,100,100,0.1);
+}
+.main-menu .back{
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+}
+.main-menu .back a{
+    display: inline-flex;
+    height: 100%;
+    width: 60px;
+    font-size: 1.08em;
+    color: white;
+    cursor: pointer;
+    font-family: calibri;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color:  #b80000;
+    text-decoration: none;
+}
+.main-menu .menu{
+    height: 100%;
+    width: 70px;
+    align-self: flex-start;
+    background-color: #b80000;
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+.main-menu .main-menu__item{
+    font-size: 1.2em;
+    display: flex;
+    width: 50px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: #b80000;
+    text-decoration: none;
+}
+.main-menu .main-menu__item:hover{
+    background-color: #b800000d;
+}
+.main-menu .main-menu__item.active{
+    position: relative;
+}
+.main-menu .main-menu__item.active::before{
+    content: '';
+    height: 4px;
+    width: 80%;
+    border-radius: 20%;
+    background-color: #850000;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.main-menu .menu .smenu{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 60px;
+    min-height: 60px;
+    width: 70px;
+    background-color: transparent;
+    font-size: 1.4em;
+    cursor: pointer;
+}
+.main-menu .menu .s-menu{
+    transition: all 0.3s;
+    display: none;
+    align-items: center;
+    flex-direction: column;
+    width: 170px;
+    box-shadow: 0px 0px 8px 3px rgba(100,100,100,0.1);
+    background-color: white;
+    margin-right: 10px;
+}
+.main-menu .menu .s-menu a{
+    display: grid;
+    text-decoration: none;
+    font-family: calibri;
+    height: 60px;
+    padding: 10px;
+    align-items: center;
+    grid-template-columns: 40px 1fr;
+    color: #b80000;
+    width: 100%;
+    background-color: white;
+}
+.main-menu .menu .s-menu a:hover{
+    background-color: #b8000015;
+}
+.main-menu .menu:hover .s-menu{
+    display: flex;
+}
+.title{
+    font-size: 2em;
+    font-weight: 100;
+    padding: 25px 20px;
+    margin-left: 25px;
+    color: #900000;
+    font-family: corbel;
+    position: relative;
+    font-weight: bold;
+}
+.title::before{
+    content: "";
+    height: 2px;
+    width: 280px;
+    background-color: #850000;
+    position: absolute;
+    bottom: 0px;
+}
+h3{
+    margin: 20px;
+    margin-left: 30px;
+    font-family: calibri;
+}
+.notif{
+    background-color: rgba(12, 218, 12, 0.208);
+    width: 90%;
+    height: auto;
+    margin-left: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    padding-top: 0px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 5px 5px rgba(100,100,100,0.05);
+}
+.notif.denied{
+    background-color: #85000022;
+}
+.notif.warning{
+    background-color: transparent;
+    background-color: rgba(255, 230, 0, 0.1);
+}
+.notif i{
+    align-self: flex-end;
+}
+.notif p{
+    font-family: calibri;
+    font-weight: 100;
+    font-size: 1.1em;
+}
+.rien{
+    font-family: calibri;
+    font-weight: 100;
+    font-size: 1.1em;
+    text-align: center;  
+    background-color: #85000007;
+    width: 90%;
+    padding: 20px;
+    margin-left: 30px;
+    color: #850000;
+}
+.headerInfoContainer{
+    background-color: transparent;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.dateReceived{
+    font-weight: 100;
+    font-family: calibri;
+    font-size: 0.9em;
+}
+.headerInfoContainer i{
+    background-color: transparent;
+   padding: 0px 8px;
+}
+.confirmBorrow{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1090;
+    background-color: rgba(10, 10, 10, 0.5);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.confirmBorrow div.c1{
+    height: 140px;
+    padding: 10px;
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 16px 8px rgba(10, 10, 10, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+.confirmBorrow p{
+    font-family: calibri;
+    font-size: 1.1em;
+    flex: 1;
+    margin: 5px;
+}
+.confirmBorrow div.sc1{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    background-color: transparent;
+    height: 50px;
+    justify-content: flex-end;
+}
+.confirmBorrow div.sc1 :is(input, a){
+    margin: 8px;
+    border: none;
+    height: 40px;
+    padding: 10px 15px;
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 25px;
+    color: white;
+    background-color: #850000;
+    font-family: calibri;
+    font-size: 1em;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+.confirmBorrow div.sc1 :is(a){
+    background-color: transparent;
+    color: #850000;
+    margin: 2px;
+}
+.nothing{
+    display: flex;
+    flex-direction: column;
+}
+.nothing img{
+    height: 300px;
+}
+.nothing span{
+    font-size: 1.1em;
+    font-family: calibri;
+    padding: 10px 0px;
+    color: #850000;
+}
+.loaderContainer{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #fffffff5;
+    height: 100%;
+    width: 100%;
+    z-index: 1800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.loaderContainer b{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #850000;
+    font-size: 1.03em;
+    margin: 10px;
+}

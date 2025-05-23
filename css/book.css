@@ -1,0 +1,413 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+*:focus{
+    outline: none;
+}
+body{
+    padding-top: 60px;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.main-menu{
+    display: flex;
+    align-items: center;
+    position: fixed;
+    z-index: 800;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 60px;
+    background-color: white;
+    justify-content: flex-end;
+    box-shadow: 0px 0px 8px 5px rgba(100,100,100,0.1);
+}
+.main-menu .back{
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+}
+.main-menu .back a{
+    display: inline-flex;
+    height: 100%;
+    width: 60px;
+    font-size: 1.08em;
+    color: white;
+    cursor: pointer;
+    font-family: calibri;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color:  #b80000;
+    text-decoration: none;
+}
+.main-menu .menu{
+    height: 100%;
+    width: 70px;
+    align-self: flex-start;
+    background-color: #b80000;
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+.main-menu .main-menu__item{
+    font-size: 1.2em;
+    display: flex;
+    width: 50px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: #b80000;
+    text-decoration: none;
+}
+.main-menu .main-menu__item:hover{
+    background-color: #b800000d;
+}
+.main-menu .menu .smenu{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 60px;
+    min-height: 60px;
+    width: 70px;
+    background-color: transparent;
+    font-size: 1.4em;
+    cursor: pointer;
+}
+.main-menu .menu .s-menu{
+    transition: all 0.3s;
+    display: none;
+    align-items: center;
+    flex-direction: column;
+    width: 170px;
+    box-shadow: 0px 0px 8px 3px rgba(100,100,100,0.1);
+    background-color: white;
+    margin-right: 10px;
+}
+.main-menu .menu .s-menu a{
+    display: grid;
+    text-decoration: none;
+    font-family: calibri;
+    height: 60px;
+    padding: 10px;
+    align-items: center;
+    grid-template-columns: 40px 1fr;
+    color: #b80000;
+    width: 100%;
+    background-color: white;
+}
+.main-menu .menu .s-menu a:hover{
+    background-color: #b8000015;
+}
+.main-menu .menu:hover .s-menu{
+    display: flex;
+}
+.book{
+    width: 900px;
+    height: auto;
+    background-color: white;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.book__couverture{
+    background-color: #b80000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    min-width: 350px;
+    width: 350px;
+    height: 500px;
+}
+.book__couverture img{
+    height: 100%;
+    width: 100%;
+}
+.rightSide{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: transparent;
+}
+.rightSide .book__title{
+    font-family: calibri;
+    font-size: 2em;
+    font-weight: 100;
+    margin: 20px;
+    margin-bottom: 10px;
+    color: #b80000;
+}
+.rightSide #auteur{
+    font-family: calibri;
+    font-size: 1em;
+    margin: 3px;
+    margin-left: 20px;
+}
+.item:not(.isbnContainer){
+    margin: 5px;
+    align-items: center;
+}
+.item label{
+    font-family: calibri;
+    font-size: 0.8em;
+    margin-left: 20px;
+    font-weight: bold;
+    color: #b80000;
+    background-color: transparent;
+}
+.isbnContainer p{
+      margin: 8px;
+      font-family: calibri;
+      font-size: 1.1em;
+      margin-left: 25px;  
+}
+.item p{
+    font-family: calibri;
+    font-size: 1.1em;
+}
+.buttonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 8px;
+    background-color: transparent;
+}
+.buttonContainer a{
+    text-decoration: none;
+    font-family: calibri;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-transform: capitalize;
+    color: #b80000;
+    padding: 0px 10px;
+}
+.buttonContainer button{
+    padding: 15px;
+    border-radius: 20px;
+    color: white;
+    cursor: no-drop;
+}
+.buttonContainer button.reserv{
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+.buttonContainer button.reserv::before{
+    content: '';
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    background-color: transparent;
+    top: 0px;
+}
+.confirmBorrow{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1090;
+    background-color: rgba(10, 10, 10, 0.5);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.confirmBorrow div.c1{
+    height: 140px;
+    padding: 10px;
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 16px 8px rgba(10, 10, 10, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+.confirmBorrow p{
+    font-family: calibri;
+    font-size: 1.1em;
+    flex: 1;
+    margin: 5px;
+}
+.confirmBorrow div.sc1{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    background-color: transparent;
+    height: 50px;
+    justify-content: flex-end;
+}
+.confirmBorrow div.sc1 :is(input, a){
+    margin: 8px;
+    border: none;
+    height: 40px;
+    padding: 10px 15px;
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 25px;
+    color: white;
+    background-color: #850000;
+    font-family: calibri;
+    font-size: 1em;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+.confirmBorrow div.sc1 :is(a){
+    background-color: transparent;
+    color: #850000;
+    margin: 2px;
+}
+
+.reservationFen{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(255, 255, 255, 0.964);
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    padding-bottom: 120px;
+}
+.closeReservationPopup{
+    display: inline-flex;
+    height: 50px;
+    min-height: 50px;
+    width: 100%;
+    box-shadow: 0px 0px 16px 2px rgba(20,20,20,0.1);
+    font-size: 1.2em;
+    color: #850000;
+    font-weight: bold;
+    position: sticky;
+    top: 0px;
+    font-family: calibri;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 30px;
+    cursor: pointer;
+    background-color: white;
+}
+.modeemprunt{
+    display: flex;
+    background-color: rgb(239, 239, 239);
+    padding: 10px 0px;
+    padding-left: 20px;
+    position: sticky;
+    top: 50px;
+}
+.modeemprunt input{
+    cursor: pointer;
+}
+.modeemprunt label{
+    margin: 5px 10px;
+    font-size: 1.1em;
+    font-family: calibri;
+    color: #850000;
+}
+.userInfosContainer{
+    display: flex;
+    flex-direction: column;
+}
+.userInfosContainer label{
+    align-self: center;
+    display: inline-flex;
+    width: 400px;
+    min-height: 40px;
+    height: 40px;
+    align-items: center;
+    padding-left: 5px;
+    font-family: calibri;
+    color: #850000;
+}
+.userInfosContainer input{
+    padding-left: 20px;
+    width: 400px;
+    color: rgb(94, 94, 94);
+    font-size: 1em;
+    align-self: center;
+    height: 45px;
+    border-radius: 5px;
+    background-color: rgba(234, 234, 234);
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0px 0px 8px 5px rgba(127, 127, 127, 0.051);
+}
+.userInfosContainer input:focus{
+    background-color: rgba(224, 224, 224, 0.504);
+}
+.booksInfo{
+    background-color: white;
+    width: 350px;
+    align-self: center;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.1);
+}
+.booksInfo #book-img{
+    height: 350px;
+    width: 100%;
+    object-fit: contain;
+}
+.booksInfo .bookTitle{
+    padding: 10px 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    font-family: calibri;
+    color: #850000;
+    text-align: center;
+}
+.booksInfo .bookAuteur{
+    font-family: serif;
+}
+.infop{
+    padding: 10px;
+    background-color: #90000018;
+    color: #850000;
+    font-family: calibri;
+    font-size: 1.1em;
+    margin: 2px 0px;
+}
+.buttonPanel{
+    /* position: fixed; */
+    /* bottom: 0px;
+    left: 0px; */
+    margin-top: 20px;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+.buttonPanel button{
+    height: 45px;
+    width: 200px;
+    margin: 0px 8px;
+    border: none;
+    box-shadow: 0px 0px 8px 5px rgba(0,0,0,0.1);
+    background-color: #850000;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    color: white;
+}
