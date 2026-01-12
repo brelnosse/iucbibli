@@ -35,10 +35,15 @@ Application web de gestion des emprunts de livres (réservations, retours, péna
 3.  Une fois connecté :
     * Recherchez un livre et ajoutez-le au panier.
     * Validez une demande d'emprunt.
+`
+    *compte étudiant de test:*
+    nom complet: **brel nosse**
+    matricule: **iuc23e0081654**
+`
 
 #### 🔐 **Test Bibliothécaire (Admin)**
 1.  Sur l'accueil, cliquez sur **"Se connecter en tant qu'administrateur"**.
-2.  Utilisez le code d'accès suivant : **[email: jfk19736@gmail.com, matricule: IUC23E0081654]**.
+2.  Utilisez les informations suivantes : **[email: jfk19736@gmail.com, matricule: IUC23E0081654]**.
 3.  Fonctionnalités à tester :
     * **Dashboard** : Visualisez les stats (graphe des livres populaires).
     * **Gestion** : Validez les demandes d'emprunt en attente.
