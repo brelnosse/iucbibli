@@ -9,15 +9,16 @@ const errmsg = document.querySelector(".updateErrorMsg");
 
 const showErrmsg = (msg, color, time) =>{
     errmsg.innerHTML = msg;
-    errmsg.style.bottom = "5%";
     errmsg.style.backgroundColor = color;
+    errmsg.classList.remove('hidden')
     setTimeout(()=>{
         hideErrmsg();
     }, time);
 }
 const hideErrmsg = () =>{
-    errmsg.style.bottom = "-120%";
+    errmsg.classList.add('hidden')
 }
+
 
 function createThumbnail(file) {
     var reader = new FileReader();

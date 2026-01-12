@@ -4,146 +4,172 @@
     if(!isset($_SESSION['stu_mat'])){
         header("location: home.php");
     }
-    // $getnotif = $bdd->prepare("SELECT * FROM notification WHERE student_mat = ? AND viewed = 'true'");
-    // $getnotif->execute(array($_SESSION['stu_mat']));
-
-    // if($getnotif->rowCount() == 1){
-    //     echo "done";
-    // }else{
-    //     echo "none";
-    // }
+    
+    // Logique de déconnexion
     if(isset($_POST['confirmDisconnect'])){
         session_destroy();
         header("location: index.php");
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/regular.css"/>
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/solid.css"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="css/notification.css">
-    <title>Panier - <?php echo htmlspecialchars($_SESSION['stu_name']); ?></title>
+    <title>Notifications - <?php echo htmlspecialchars($_SESSION['stu_name']); ?></title>
 </head>
 <body>
-    <div class="loaderContainer">
-        <i class="fa-regular fa-bell fa-shake" style="font-size: 3em; color: rgba(150,0,0)"></i>
-        <b>notifications</b>
-    </div>
-    <script>
-        const loaderContainer = document.querySelector(".loaderContainer");
 
-        setTimeout(() => {
-                loaderContainer.style.display = "none";
-        }, 1000);
-    </script>
-    <div class="main-menu">
-        <div class="back">
-            <a href="home.php?cote=all"><i class="fa fa-arrow-left"></i></a>
+    <nav class="top-navbar">
+        <div class="nav-left">
+            <a href="home.php?cote=all" class="back-btn"><i class="fa fa-arrow-left"></i> Retour</a>
         </div>
-        <a href="notification.php" class="main-menu__item active"><i class="fa fa-bell"></i></a>
-        <a href="panier.php" class="main-menu__item"><i class="fa fa-shopping-cart"></i></a>
-        <div class="menu">
-            <span class="smenu">
-                <i class="fa fa-user-circle"></i>
-                <span style="font-size: 0.8em"><i class="fa fa-angle-down"></i></span>
-            </span>
-            <div class="s-menu">
-                <a href="notification.php?disconnect" class="item"><i class="fa fa-sign-out-alt"></i> Deconnexion</a>
+        
+        <div class="nav-actions">
+            <a href="notification.php" class="menu-item active-notif">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+
+            <a href="panier.php" class="menu-item"><i class="fa-solid fa-cart-shopping"></i></a>
+
+            <div class="profile-dropdown">
+                <div class="profile-trigger">
+                    <div class="avatar"><?php echo strtoupper(substr($_SESSION['stu_name'], 0, 1)); ?></div>
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-content">
+                    <span class="user-name">Salut, <?php echo $_SESSION['stu_name']; ?></span>
+                    <a href="notification.php?disconnect" class="disconnect-btn"><i class="fa fa-arrow-right-from-bracket"></i> Deconnexion</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="itemContainer">
-        <h2 class="title">Notification(s)</h2>
+    </nav>
 
-        <h3>Message important</h3>
-        <?php 
-             $get  = $bdd->prepare("SELECT * FROM notification WHERE student_mat = ? AND viewed = 'false'");
-             $get->execute(array(htmlspecialchars($_SESSION['stu_mat'])));  
+    <main class="container">
+        <header class="page-header">
+            <h1>Centre de <span class="highlight">Notifications</span></h1>
+            <p>Restez informé sur vos emprunts et demandes.</p>
+        </header>
 
-             if($get->rowCount() == 1){
-                $getd = $get->fetch();
-                ?>
-                <div class="notif warning">
-                    <i class="fa-solid fa-bell" style="color:#b80000; margin: 5px; margin-left: 0px; font-size: 0.8em"></i>
-                    <p><i class="fa fa-triangle-exclamation" style="color: rgb(130,150,0)"></i> Votre emprunt arrive a terme dans <?php echo $getd["day_left"]; ?> Jours</p>
-                </div>
-            <?php
-             }else{
-                echo "<p class='rien'>Aucun message important pour le moment .</p>";
-             }
-        ?>
-        <h3>Message de l'administrateur</h3>
-        <?php
-            $getUser  = $bdd->prepare("SELECT * FROM emprunt WHERE matricule_etudiant = ? AND isok != 'false'");
-            $getUser->execute(array(htmlspecialchars($_SESSION['stu_mat'])));
+        <div class="notif-container">
             
-            if($getUser->rowCount() > 0){
-                while($fetchUser = $getUser->fetch()){
-                    $getBook = $bdd->prepare("SELECT * FROM livres WHERE ISBN_livres = ?");
-                    $getBook->execute(array(htmlspecialchars($fetchUser['isbn_livres'])));
-    
-                    if($getBook->rowCount() == 1){ 
-                        $book = $getBook->fetch();
-                            if($fetchUser['isok'] == "refus"){ ?>
-                            <div class="notif denied">
-                            <span class="headerInfoContainer"><span class="dateReceived"><?php echo $fetchUser["repliedDate"]; ?></span><i class="fa-solid fa-bell" style="color:#b80000; margin: 5px; margin-left: 0px; font-size: 0.8em"></i></span>
-                                <p><i class="fa fa-times-circle" style="color: #b80000"></i> Votre demande d'emprunt pour le livre <?php echo $book["titre_livres"]; ?> a ete accepter refuser<?php echo $fetchUser['date_debut'];?></p>
-                            </div>
-                        <?php
-                            }else{ 
-                                    if($fetchUser['viewedbystudent'] == 'true'){ ?>
-                                    <div class="notif" style="background-color: #f1ffe7; box-shadow: 0px 0px 16px 8px rgba(200,200,200,0.05)">
-                                        <span class="headerInfoContainer"><span class="dateReceived"><?php echo $fetchUser["repliedDate"]; ?></span><i class="fa-solid fa-bell" style="color:#b80000; margin: 5px; margin-left: 0px; font-size: 0.8em"></i></span>
-                                        <p><i class="fa fa-check-circle" style="color: rgba(0,130,0)"></i> Votre demande d'emprunt pour le livre <b>"<?php echo $book["titre_livres"]; ?>"</b> a ete accepter et debute le <?php echo $fetchUser['date_debut'];?></p>
+            <section class="notif-section">
+                <h3 class="section-title"><i class="fa fa-circle-exclamation"></i> Message important</h3>
+                
+                <?php 
+                    $get = $bdd->prepare("SELECT * FROM notification WHERE student_mat = ? AND viewed = 'false'");
+                    $get->execute(array(htmlspecialchars($_SESSION['stu_mat'])));  
+
+                    if($get->rowCount() == 1){
+                        $getd = $get->fetch();
+                ?>
+                    <div class="notif-card warning">
+                        <div class="icon-box">
+                            <i class="fa fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="content-box">
+                            <h4>Attention</h4>
+                            <p>Votre emprunt arrive a terme dans <b><?php echo $getd["day_left"]; ?> Jours</b></p>
+                        </div>
+                    </div>
+                <?php
+                    }else{
+                        echo "<div class='empty-message'>Aucun message important pour le moment .</div>";
+                    }
+                ?>
+            </section>
+
+            <section class="notif-section">
+                <h3 class="section-title"><i class="fa fa-envelope-open-text"></i> Message de l'administrateur</h3>
+                
+                <div class="notif-list">
+                <?php
+                    $getUser = $bdd->prepare("SELECT * FROM emprunt WHERE matricule_etudiant = ? AND isok != 'false'");
+                    $getUser->execute(array(htmlspecialchars($_SESSION['stu_mat'])));
+                    
+                    if($getUser->rowCount() > 0){
+                        while($fetchUser = $getUser->fetch()){
+                            $getBook = $bdd->prepare("SELECT * FROM livres WHERE ISBN_livres = ?");
+                            $getBook->execute(array(htmlspecialchars($fetchUser['isbn_livres'])));
+            
+                            if($getBook->rowCount() == 1){ 
+                                $book = $getBook->fetch();
+                                
+                                // CAS: REFUS
+                                if($fetchUser['isok'] == "refus"){ ?>
+                                    <div class="notif-card danger">
+                                        <div class="icon-box">
+                                            <i class="fa fa-times"></i>
+                                        </div>
+                                        <div class="content-box">
+                                            <div class="notif-header">
+                                                <h4>Demande Refusée</h4>
+                                                <span class="date-badge"><?php echo $fetchUser["repliedDate"]; ?></span>
+                                            </div>
+                                            <p>Votre demande d'emprunt pour le livre <b><?php echo $book["titre_livres"]; ?></b> a ete accepter refuser<?php echo $fetchUser['date_debut'];?></p>
+                                        </div>
                                     </div>
                                 <?php
-                                    }else{ ?>
-                                    <div class="notif">
-                                        <span class="headerInfoContainer"><span class="dateReceived"><?php echo $fetchUser["repliedDate"]; ?></span><i class="fa-solid fa-bell" style="color:#b80000; margin: 5px; margin-left: 0px; font-size: 0.8em"></i></span>
-                                        <p><i class="fa fa-check-circle" style="color: rgb(0,130,0)"></i> Votre demande d'emprunt pour le livre <b>"<?php echo $book["titre_livres"]; ?>"</b> a ete accepter et debute le <?php echo $fetchUser['date_debut'];?></p>
-                                    </div>
-                                <?php    
-                                }
+                                } else { 
+                                    // CAS: ACCEPTE (Non vu ou Vu)
+                                    $isNew = ($fetchUser['viewedbystudent'] == 'false') ? 'new-glow' : '';
                                 ?>
-                        <?php
+                                    <div class="notif-card success <?php echo $isNew; ?>">
+                                        <div class="icon-box">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <div class="content-box">
+                                            <div class="notif-header">
+                                                <h4>Demande Approuvée</h4>
+                                                <span class="date-badge"><?php echo $fetchUser["repliedDate"]; ?></span>
+                                            </div>
+                                            <p>Votre demande d'emprunt pour le livre <b>"<?php echo $book["titre_livres"]; ?>"</b> a ete accepter et debute le <?php echo $fetchUser['date_debut'];?></p>
+                                        </div>
+                                    </div>
+                                <?php
+                                }
                             }
-                }
-            }
-            }else{
-                if($getUser->rowCount() == 0){ ?>
-                    <div class="nothing" style="background-color: transparent; margin: auto; display: flex; flex-direction: column; align-items:center;height: calc(100vh - 180px)">
-                        <img src="assets/undraw_bibliophile_re_xarc.svg" alt="pas de livres" style="flex:1">
-                        <span style="font-size: 2em; font-weight: 100; margin: 20px 0px">Vous n'avez pas encore de notifications.</span>
-                    </div>
-            <?php
-                    }
-            }
-        ?>
-    </div>
-    <?php
-        if(isset($_GET['disconnect'])){ ?>
-        <form method="post" class="confirmBorrow">
-            <div class="c1">
-                <p style="background-color: transparent; display: flex;align-items: center">Etes-vous sur de vouloir vous deconnecter ?</p>
-                <div class="sc1">
-                    <input type="submit" value="Oui" name="confirmDisconnect">
-                    <a href="notification.php">annuler</a>
+                        }
+                    } else { ?>
+                        <div class="empty-state">
+                            <img src="assets/undraw_bibliophile_re_xarc.svg" alt="Rien">
+                            <p>Vous n'avez pas encore de notifications.</p>
+                        </div>
+                    <?php } ?>
                 </div>
-            </div>               
-        </form>
-    <?php
-        }
-    ?>
+            </section>
+        </div>
+    </main>
+
+    <?php if(isset($_GET['disconnect'])){ ?>
+        <div class="confirmBorrow active-backdrop">
+            <div class="dialog-card">
+                <div class="dialog-icon danger"><i class="fa fa-power-off"></i></div>
+                <h3>Deconnexion ?</h3>
+                <p>Etes-vous sur de vouloir vous deconnecter ?</p>
+                <form method="post" class="dialog-actions">
+                    <a href="notification.php" class="btn-ghost">annuler</a>
+                    <input type="submit" value="Oui" name="confirmDisconnect" class="btn-danger">
+                </form>
+            </div>
+        </div>
+    <?php } ?>
+
 </body>
 </html>
+
 <?php
     $getnotif = $bdd->prepare("UPDATE notification SET viewed = 'true' WHERE student_mat = ?");
     $getnotif->execute(array($_SESSION['stu_mat']));
 
     $setView = $bdd->prepare("UPDATE emprunt SET viewedbystudent = 'true' WHERE matricule_etudiant = ?");
     $setView->execute(array($_SESSION['stu_mat']));
+?>

@@ -79,360 +79,280 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/solid.css"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="css/home.css">
-    <title>IUCBibli</title>
+    <title>IucBibli</title>
 </head>
 <body>
-    <!-- <div class="loaderContainer">
-            <i class="fa fa-book-open-reader fa-fade" style="font-size: 3em; color: rgba(150,0,0)"></i>
-            <b>Bibliotheque</b>
-    </div>
-    <script>
-        // const loaderContainer = document.querySelector(".loaderContainer");
 
-        // setTimeout(() => {
-        //         loaderContainer.style.display = "none";
-        // }, 1500);
-    </script> -->
-    <form method="post" class="main-menu">
-        <a href="home.php?action=showCautionInfo&cote=all" class="walletItem">
-            <i class="fa fa-piggy-bank"></i>
-            <span class="amount">
-                <?php 
-                    $getAmount = $bdd->prepare("SELECT * FROM caution WHERE mat_etu = ?");
-                    $getAmount->execute(array(htmlspecialchars($_SESSION['stu_mat'])));
-
-                    if($getAmount->rowCount() == 0){
-                        echo "0 FCFA";
-                    }else{
-                        $getAmountfetched = $getAmount->fetch();
-                        echo $getAmountfetched['caution']." FCFA";
-                    }
-                ?>
-            </span>
-        </a>
-        <div class="searchContainer">
-            <input type="search" class="search" placeholder="Entrer le titre, ou le nom de l'auteur.." name="q" value="<?php 
-                if(isset($_POST['q']) AND !empty($_POST['q'])){
-                    echo htmlspecialchars($_POST['q']);
-                }
-            ?>">
-            <button type="submit" class="searchBtn"><i class="fa fa-search"></i></button>
+    <nav class="top-navbar">
+        <div class="logo">
+            <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
         </div>
-        <a href="notification.php" class="main-menu__item" style="position: relative"><i class="fa fa-bell"></i>
-        <?php
-            $getnotif = $bdd->prepare("SELECT * FROM notification WHERE student_mat = ? AND viewed = 'false'");
-            $getnotif->execute(array($_SESSION['stu_mat']));
-            $getnotif2 = $bdd->prepare("SELECT * FROM emprunt WHERE matricule_etudiant = ? AND viewedbystudent = 'false' AND repliedDate IS NOT NULL");
-            $getnotif2->execute(array($_SESSION['stu_mat']));
-
-            if($getnotif->rowCount() == 1 || $getnotif2->rowCount() == 1){ ?>
-                <b class="bbull" style="background-color: red; height: 8px; width: 8px; border-radius: 50%; position: absolute; top: 20px; left: 5px"></b>         
-                <script>
-                    if(Notification.permission === "granted"){
-                        new Notification("Nouvelle notification");          
-                    }else{
-                        Notification.requestPermission()
-                        .then(permission =>{
-                            if(permission === "granted"){
-                                new Notification("Nouvelle notification");
-                            }
-                        })
-                    }
-                </script>
-            <?php
-            }
-        ?>
-        </a>
-        <a href="panier.php" class="main-menu__item"><i class="fa fa-shopping-cart"></i></a>
-        <div class="menu">
-            <span class="smenu">
-                <i class="fa fa-user-circle"></i>
-                <span style="font-size: 0.8em"><i class="fa fa-angle-down"></i></span>
-            </span>
-            <div class="s-menu">
-                <a href="home.php?cote=all&disconnect" class="item"><i class="fa fa-sign-out-alt"></i> Deconnexion</a>
+        
+        <form method="post" class="nav-actions">
+             <div class="search-bar">
+                <i class="fa fa-search"></i>
+                <input type="search" placeholder="Rechercher des livres, auteurs..." name="q" value="<?php if(isset($_POST['q'])) echo htmlspecialchars($_POST['q']); ?>">
             </div>
-        </div>
-</form>
 
-    <div class="onglets">
-        <?php
-            if(isset($_GET['cote']) AND !empty($_GET['cote'])){
-                switch($_GET['cote']){
-                    case 'trespopulaire': ?>
-                    <a href="home.php?cote=all" class="onglet">Tout</a>
-                    <a href="home.php?cote=populaire" class="onglet">Populaire</a>
-                    <a href="home.php?cote=trespopulaire" class="onglet activeTab">Tr&eacute;s populaire</a>                  
-        <?php
-                    break;
-                    case 'populaire': ?>
-                        <a href="home.php?cote=all" class="onglet">Tout</a>
-                        <a href="home.php?cote=populaire" class="onglet activeTab">Populaire</a>
-                        <a href="home.php?cote=trespopulaire" class="onglet">Tr&eacute;s populaire</a>                  
-            <?php
-                        break;
-                    case 'all': ?>
-                        <a href="home.php?cote=all" class="onglet activeTab">Tout</a>
-                        <a href="home.php?cote=populaire" class="onglet">Populaire</a>
-                        <a href="home.php?cote=trespopulaire" class="onglet">Tr&eacute;s populaire</a>                  
-            <?php
-                    break;
-                    default: ?>
-                        <a href="home.php?cote=all" class="onglet activeTab">Tout</a>
-                        <a href="home.php?cote=populaire" class="onglet">Populaire</a>
-                        <a href="home.php?cote=trespopulaire" class="onglet">Tr&eacute;s populaire</a>                  
-            <?php
-                    break;
-                }
-            }else{ ?>
-                <a href="home.php?cote=all" class="onglet activeTab">Tout</a>
-                <a href="home.php?cote=populaire" class="onglet">Populaire</a>
-                <a href="home.php?cote=trespopulaire" class="onglet">Tr&eacute;s populaire</a> 
-        <?php
-            }
-        ?>
-    </div>
-    <?php
-        if(isset($_GET['cote']) AND ($_GET['cote'] != 'populaire' AND $_GET['cote'] != 'trespopulaire') AND !isset($_POST['q'])){
-            $getPopu = $bdd->query("SELECT * FROM livres WHERE cote_livres > (SELECT AVG(cote_livres) FROM livres) AND nbre_livres > 0 ORDER BY cote_livres DESC LIMIT 5");
-            if($getPopu->rowCount() > 0){ ?>
-                <h2 class="title">Meilleurs Livre(s)</h2>
-                <div class="popuContainer">
-                <?php
-                    while($data = $getPopu->fetch()){ ?>
-                    <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="popubook">
-                        <img src="admin/<?php echo $data["couverture_livres"]?>" alt="livre populaire">
-                        <span class="poptitle"><?php echo $data['titre_livres']; ?></span>
-                        <span class="popauteur"><?php echo $data['auteur_livres']; ?></span>
-                            <button class="">
-                                <i class="fa fa-eye" style="margin-right:5px"></i>
-                                Voir
-                            </button>
-                            <?php 
-                                // $getViews = $bdd->prepare("SELECT COUNT(*) FROM vue WHERE book_isbn = ?");
-                                // $getViews->execute(array($data['ISBN_livres']));
-                                // $get = $getViews->fetch();
-                                // echo $get[0]; 
-                             ?> 
-                    </a>
-                <?php
-                    }
-            }
-        }else{
-            if(!isset($_GET['cote'])){
-                $getPopu = $bdd->query("SELECT * FROM livres WHERE cote_livres > (SELECT AVG(cote_livres) FROM livres) AND nbre_livres > 0 ORDER BY cote_livres DESC LIMIT 3");
-                if($getPopu->rowCount() > 0){ ?>
-                    <h2 class="title">Meilleurs Livre(s)</h2>
-                    <div class="popuContainer">
-                    <?php
-                        while($data = $getPopu->fetch()){ ?>
-                        <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="popubook">
-                            <img src="admin/<?php echo $data["couverture_livres"]?>" alt="livre populaire">
-                            <span class="poptitle"><?php echo $data['titre_livres']; ?></span>
-                            <span class="popauteur"><?php echo $data['auteur_livres']; ?></span>
-                                <button class="">
-                                    <i class="fa fa-eye" style="margin-right:5px"></i>
-                                    Voir
-                                </button>
-                                <?php 
-                                    // $getViews = $bdd->prepare("SELECT COUNT(*) FROM vue WHERE book_isbn = ?");
-                                    // $getViews->execute(array($data['ISBN_livres']));
-                                    // $get = $getViews->fetch();
-                                    // echo $get[0]; 
-                                ?> 
-                        </a>
-                    <?php
-                        }
-                }
-            }
-        }
-            ?>
-            </div>
-        <h2 class="title">Tous les livres</h2>
-        <div class="booksContainer">
-            <?php
-                if(isset($_GET['cote']) AND !empty($_GET['cote'])){
-                $getBooks;
-                switch($_GET['cote']){
-                    case "all":
-                        $getBooks = $bdd->query("SELECT * FROM livres WHERE nbre_livres > 0");
-                    break;
-                    case "populaire":
-                        $getBooks = $bdd->query("SELECT * FROM livres WHERE cote_livres > 30 AND cote_livres < 100 AND nbre_livres > 0");
-                    break; 
-                    case "trespopulaire":
-                        $getBooks = $bdd->query("SELECT * FROM livres WHERE cote_livres > 100 AND nbre_livres > 0");
-                    break; 
-                    default:
-                        $getBooks = $bdd->query("SELECT * FROM livres WHERE nbre_livres > 0");
-                    break;
-                }
-                if(isset($_POST['q']) AND !empty($_POST['q'])){
-                    $getBooks = $bdd->query("SELECT * FROM livres WHERE titre_livres LIKE '%".htmlspecialchars($_POST['q'])."%' OR auteur_livres LIKE '%".htmlspecialchars($_POST['q'])."%' AND nbre_livres > 0 ");
-                }
-                if($getBooks->rowCount() > 0){ 
-                    while($data = $getBooks->fetch()){ ?>
-                    <div class="book">
-                        <img src="admin/<?php echo $data["couverture_livres"]?>" class="couv">
-                        <div class="book_body" id="<?php echo $data["auteur_livres"]; ?>">
-                            <h3><?php echo $data['titre_livres']; ?></h4>
-                            <h4><?php echo $data["auteur_livres"]; ?></h6>
-                            <span class="explNum"><b style="background-color: #2d2d2d; padding: 2px 5px;  border-radius: 1px; color: white; margin-right: 5px"><?php echo $data["nbre_livres"]; ?></b> Exemplaire(s)</span>
-                        </div>
-                        <div class="buttonCommand" id="<?php echo $data['titre_livres']; ?>">
-                            <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="" style="text-decoration:none"><i class="fa fa-eye" style="margin-right: 5px"></i> 
-                            <?php 
-                                    $getViews = $bdd->prepare("SELECT COUNT(*) FROM vue WHERE book_isbn = ?");
-                                    $getViews->execute(array($data['ISBN_livres']));
-                                    $get = $getViews->fetch();
-                                    echo $get[0]; 
-                                ?>
-                            </a>
-                            <?php
-                            $d = $bdd->prepare("SELECT COUNT(matricule_etudiant) FROM emprunt WHERE matricule_etudiant = ?");
-                            $d->execute(array($_SESSION['stu_mat']));
-                            $dfetch = $d->fetch();
-                            if($dfetch[0] == 0){ ?>
-                                <button class="reservbtnshow" id="<?php echo $data["ISBN_livres"]; ?>"><i class="fa fa-cart-plus" style="margin: 5px"></i> Emprunter</button>
+            <div class="user-menu">
+                <a href="home.php?action=showCautionInfo&cote=all" class="menu-item wallet" title="Ma Caution">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span class="amount">
                         <?php 
-                            }else{ ?>
-                                <button class="reservbtnshows" style="background-color: rgba(100,100,100)" id="<?php echo $data["ISBN_livres"]; ?>"><i class="fa fa-cancel" style="margin: 5px"></i> Faire une reservation</button>
-                        <?php
-                            }
-                        ?>   
-                        </div>
-                    </div>
-            <?php
-                    }
-                }else{ ?>
-                <div class="nothing" style="background-color: transparent; margin: auto; display: flex; flex-direction: column; align-items:center">
-                    <img src="assets/undraw_bibliophile_re_xarc.svg" alt="pas de livres">
-                    <span>Pas de livres</span>
-                    <a href="home.php?cote=all">Rafraichir la page</a>
-                </div>   
-            <?php
-                }
-            }else{
-            $getBooks = $bdd->query("SELECT * FROM livres WHERE nbre_livres > 0");
-            if($getBooks->rowCount() > 0){ 
-                while($data = $getBooks->fetch()){ ?>
-                <div class="book">
-                    <img src="admin/<?php echo $data["couverture_livres"]?>" class="couv">
-                    <div class="book_body" id="<?php echo $data["auteur_livres"]; ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 320" class="wave1">
-                            <path fill="#b80000" fill-opacity="1" d="M0,256L80,261.3C160,267,320,277,480,272C640,267,800,245,960,229.3C1120,213,1280,203,1360,197.3L1440,192L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
-                        </svg>
-                        <h3><?php echo $data['titre_livres']; ?></h4>
-                        <h4><?php echo $data["auteur_livres"]; ?></h6>
-                        <span class="explNum"><b style="background-color: #900000; padding: 2px 5px;  border-radius: 10px; color: white; margin-right: 5px"><?php echo $data["nbre_livres"]; ?></b> Exemplaire(s) disponible</span>
-                    </div>
-                    <div class="buttonCommand" id="<?php echo $data['titre_livres']; ?>">
-                        <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class=""><i class="fa fa-eye"></i></a>
-                        <?php
-                            $d = $bdd->prepare("SELECT COUNT(matricule_etudiant) FROM emprunt WHERE matricule_etudiant = ?");
-                            $d->execute(array($_SESSION['stu_mat']));
-                            $dfetch = $d->fetch();
-                            if($dfetch[0] == 0){ ?>
-                                <button class="reservbtnshow" id="<?php echo $data["ISBN_livres"]; ?>"><i class="fa fa-cart-plus" style="margin: 5px"></i> Faire une reservation</button>
-                        <?php 
-                            }else{ ?>
-                                <button class="reservbtnshows" style="background-color: rgba(100,100,100)" id="<?php echo $data["ISBN_livres"]; ?>"><i class="fa fa-cancel" style="margin: 5px"></i> Faire une reservation</button>
-                        <?php
-                            }
+                            $getAmount = $bdd->prepare("SELECT * FROM caution WHERE mat_etu = ?");
+                            $getAmount->execute(array(htmlspecialchars($_SESSION['stu_mat'])));
+                            if($getAmount->rowCount() == 0){ echo "0 FCFA"; }
+                            else{ $getAmountfetched = $getAmount->fetch(); echo $getAmountfetched['caution']." FCFA"; }
                         ?>
+                    </span>
+                </a>
+
+                <a href="notification.php" class="menu-item relative">
+                    <i class="fa-regular fa-bell"></i>
+                    <?php
+                        $getnotif = $bdd->prepare("SELECT * FROM notification WHERE student_mat = ? AND viewed = 'false'");
+                        $getnotif->execute(array($_SESSION['stu_mat']));
+                        $getnotif2 = $bdd->prepare("SELECT * FROM emprunt WHERE matricule_etudiant = ? AND viewedbystudent = 'false' AND repliedDate IS NOT NULL");
+                        $getnotif2->execute(array($_SESSION['stu_mat']));
+
+                        if($getnotif->rowCount() == 1 || $getnotif2->rowCount() == 1){ 
+                            echo '<span class="notif-dot"></span>';
+                        }
+                    ?>
+                </a>
+
+                <a href="panier.php" class="menu-item"><i class="fa-solid fa-cart-shopping"></i></a>
+
+                <div class="profile-dropdown">
+                    <div class="profile-trigger">
+                        <div class="avatar"><?php echo strtoupper(substr($_SESSION['stu_name'], 0, 1)); ?></div>
+                        <i class="fa fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <span class="user-name">Salut, <?php echo $_SESSION['stu_name']; ?></span>
+                        <a href="home.php?cote=all&disconnect" class="disconnect-btn"><i class="fa fa-arrow-right-from-bracket"></i> Déconnexion</a>
                     </div>
                 </div>
-            <?php
-                }
-            }   
-            }
-            ?>
-        </div>
-        <div class="reservationFen">
-            <span class="closeReservationPopup">x</span>
-            <div class="modeemprunt">
-               <input type="radio" name="mode" id="emporter" checked>
-               <label for="emporter">A emporter</label>
-               <input type="radio" name="mode" id="lire">
-               <label for="lire">Lire sur place</label>
             </div>
-            <p class="infop">
-                <i class="fa fa-triangle-exclamation" style="margin: 5px"></i>Une fois sur place, vous allez fournir votre carte d'identite comme quaranti
-            </p>
-            <p class="infop">
-                <i class="fa fa-triangle-exclamation" style="margin: 5px"></i>La duree maximal d'un emprunt est de 72H soit 3 jours
-            </p>
+        </form>
+    </nav>
 
-            <div class="booksInfo">
-                <img src="" alt="" id="book-img">
-                <span class="bookTitle"></span>
-                <span class="bookAuteur"></span>
-            </div>
-            <div class="userInfosContainer">
-                <label for="u_name">Nom</label>
-                <input type="text" value="<?php echo $_SESSION['stu_name']; ?>" id="student_name" class="<?php echo htmlspecialchars($_SESSION['stu_mat']); ?>" disabled>
-                <label for="u_phone">Num&eacute;ro de t&eacute;l&eacute;phone</label>
-                <input type="text" value="<?php echo $_SESSION['stu_numero']; ?>" id="student_phone" disabled>
-                <label for="date_debut">Date de debut</label>
-                <input type="date" id="date_debut">
-                <label for="date_fin" class="emp">Date de retour</label>
-                <input type="date" id="date_fin" class="emp">
-            </div>
-            <div class="buttonPanel">
-                <button class="d_cancel" style="background-color: white; color: #b80000">Annuler</button>
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>Vous recherchez <span class="highlight">un livre particulier</span> ?</h1>
+            <p>Explorez notre bibliotèque et trouvez votre prochaine aventure.</p>
+        </div>
+        
+        <div class="custom-shape-divider-bottom-1689">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </header>
+
+    <div class="tabs-container">
+        <div class="tabs-wrapper">
+            <?php
+                $activeAll = (!isset($_GET['cote']) || $_GET['cote'] == 'all') ? 'active' : '';
+                $activePop = (isset($_GET['cote']) && $_GET['cote'] == 'populaire') ? 'active' : '';
+                $activeVeryPop = (isset($_GET['cote']) && $_GET['cote'] == 'trespopulaire') ? 'active' : '';
+            ?>
+            <a href="home.php?cote=all" class="tab-pill <?php echo $activeAll; ?>">Tout</a>
+            <a href="home.php?cote=populaire" class="tab-pill <?php echo $activePop; ?>">Populaires</a>
+            <a href="home.php?cote=trespopulaire" class="tab-pill <?php echo $activeVeryPop; ?>">Très populaire</a>
+        </div>
+    </div>
+
+    <main class="container">
+        
+        <?php
+        if((!isset($_GET['cote']) || ($_GET['cote'] != 'populaire' && $_GET['cote'] != 'trespopulaire')) && !isset($_POST['q'])){
+            $getPopu = $bdd->query("SELECT * FROM livres WHERE cote_livres > (SELECT AVG(cote_livres) FROM livres) AND nbre_livres > 0 ORDER BY cote_livres DESC LIMIT 3");
+            if($getPopu->rowCount() > 0){ ?>
+                <section class="featured-section">
+                    <h2 class="section-title">Les plus populaire <i class="fas fa-fire"></i></h2>
+                    <div class="featured-grid">
+                    <?php while($data = $getPopu->fetch()){ ?>
+                        <div class="featured-card">
+                            <img src="admin/<?php echo $data["couverture_livres"]?>" alt="Cover">
+                            <div class="featured-info">
+                                <h3><?php echo $data['titre_livres']; ?></h3>
+                                <p><?php echo $data['auteur_livres']; ?></p>
+                                <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="btn-circle"><i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    </div>
+                </section>
+        <?php } } ?>
+
+        <section class="catalog-section">
+            <h2 class="section-title">Collection de livres</h2>
+            <div class="books-grid">
                 <?php
-                            $dd = $bdd->prepare("SELECT COUNT(matricule_etudiant) FROM emprunt WHERE matricule_etudiant = ?");
-                            $dd->execute(array($_SESSION['stu_mat']));
-                            $ddfetch = $dd->fetch();
-                            if($dfetch[0] == 0){ ?>
-                                <button class="d_add">Valider l'emprunt</button>
-                        <?php 
-                            }else{ ?>
-                                <button class="d_addd" style="background-color: rgba(100,100,100)">Valider l'emprunt</button>
-                        <?php
-                            }
-                        ?> 
+                $getBooks;
+                if(isset($_POST['q']) && !empty($_POST['q'])){
+                    $getBooks = $bdd->query("SELECT * FROM livres WHERE titre_livres LIKE '%".htmlspecialchars($_POST['q'])."%' OR auteur_livres LIKE '%".htmlspecialchars($_POST['q'])."%' AND nbre_livres > 0 ");
+                } else {
+                    $cote = $_GET['cote'] ?? 'all';
+                    switch($cote){
+                        case "populaire": $sql = "SELECT * FROM livres WHERE cote_livres > 30 AND cote_livres < 100 AND nbre_livres > 0"; break;
+                        case "trespopulaire": $sql = "SELECT * FROM livres WHERE cote_livres > 100 AND nbre_livres > 0"; break;
+                        default: $sql = "SELECT * FROM livres WHERE nbre_livres > 0"; break;
+                    }
+                    $getBooks = $bdd->query($sql);
+                }
+
+                if($getBooks->rowCount() > 0){ 
+                    while($data = $getBooks->fetch()){ ?>
+                        <div class="book-card">
+                            <div class="card-image">
+                                <img src="admin/<?php echo $data["couverture_livres"]?>" loading="lazy">
+                                <div class="card-overlay">
+                                    <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="btn-view">Details</a>
+                                </div>
+                            </div>
+                            <div class="card-details">
+                                <span class="badge-category">Livre</span>
+                                <h3 title="<?php echo $data['titre_livres']; ?>"><?php echo $data['titre_livres']; ?></h3>
+                                <h4 class="author"><i class="fa fa-pen-nib"></i> <?php echo $data["auteur_livres"]; ?></h4>
+                                <div class="stock-info">
+                                    <i class="fa fa-layer-group"></i> <?php echo $data["nbre_livres"]; ?> Disponible
+                                </div>
+                                
+                                <div class="card-actions">
+                                    <?php
+                                    $d = $bdd->prepare("SELECT COUNT(matricule_etudiant) FROM emprunt WHERE matricule_etudiant = ?");
+                                    $d->execute(array($_SESSION['stu_mat']));
+                                    $dfetch = $d->fetch();
+                                    
+                                    if($dfetch[0] == 0){ ?>
+                                        <button class="btn-primary reservbtnshow" id="<?php echo $data["ISBN_livres"]; ?>">
+                                            Emprunter
+                                        </button>
+                                    <?php } else { ?>
+                                        <button class="btn-disabled reservbtnshows" id="<?php echo $data["ISBN_livres"]; ?>" disabled>
+                                            En attente
+                                        </button>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php }
+                } else { ?>
+                    <div class="empty-state">
+                        <img src="assets/undraw_bibliophile_re_xarc.svg" alt="Empty">
+                        <p>Pas de livres trouvés.</p>
+                        <a href="home.php?cote=all" class="btn-primary">Rafraîchir</a>
+                    </div> 
+                <?php } ?>
+            </div>
+        </section>
+    </main>
+
+    <div class="reservationFen">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Reserver ce livre</h3>
+                <span class="closeReservationPopup"><i class="fa fa-xmark"></i></span>
+            </div>
+
+            <div class="modal-body">
+                <div class="book-summary-modal">
+                    <img src="" alt="" id="book-img">
+                    <div class="summary-text">
+                        <span class="bookTitle"></span>
+                        <span class="bookAuteur"></span>
+                    </div>
+                </div>
+
+                <div class="borrow-options">
+                   <label class="option-card">
+                       <input type="radio" name="mode" id="emporter" checked>
+                       <div class="option-content">
+                           <i class="fa fa-house"></i>
+                           <span>A emporter</span>
+                       </div>
+                   </label>
+                   <label class="option-card">
+                       <input type="radio" name="mode" id="lire">
+                       <div class="option-content">
+                           <i class="fa fa-book-open"></i>
+                           <span>Lire sur place</span>
+                       </div>
+                   </label>
+                </div>
+
+                <div class="info-alert">
+                    <i class="fa fa-circle-info"></i>
+                    <small>Une pièce d'identité sera demandée. Durée max : 72H (3 jours).</small>
+                </div>
+
+                <div class="date-inputs">
+                    <div class="input-grp">
+                        <label>Date de debut</label>
+                        <input type="date" id="date_debut">
+                    </div>
+                    <div class="input-grp">
+                        <label>Date de retour</label>
+                        <input type="date" id="date_fin" class="emp">
+                    </div>
+                </div>
+
+                <div class="hidden-inputs">
+                    <input type="text" value="<?php echo $_SESSION['stu_name']; ?>" id="student_name" class="<?php echo htmlspecialchars($_SESSION['stu_mat']); ?>" disabled>
+                    <input type="text" value="<?php echo $_SESSION['stu_numero']; ?>" id="student_phone" disabled>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-ghost d_cancel" style="opacity: 0">Anunler</button>
+                <?php if($dfetch[0] == 0){ ?>
+                    <button class="btn-primary d_add">Valider l'emprunt</button>
+                <?php } else { ?>
+                    <button class="btn-disabled d_addd" disabled>Non autorisé</button>
+                <?php } ?>
             </div>
         </div>
-        <?php
-            if(isset($_GET['disconnect'])){ ?>
-            <form method="post" class="confirmBorrow">
-                <div class="c1">
-                    <p style="background-color: transparent; display: flex;align-items: center">Etes-vous sur de vouloir vous deconnecter ?</p>
-                    <div class="sc1">
-                        <input type="submit" value="Oui" name="confirmDisconnect">
-                        <a href="home.php?cote=all">annuler</a>
-                    </div>
-                </div>               
-            </form>
-        <?php
-            }
-            if(isset($_GET['action']) AND $_GET['action'] == "showCautionInfo"){ ?>
-            <form method="post" class="confirmBorrow">
-                <div class="c1" style="height: auto">
-                    <p style="background-color: transparent; display: flex;align-items: center; flex-direction: column">
-                        <b style="background-color: #850000; color: white; display:inline-flex; width: 100%; text-indent: 10px; padding: 15px 0px; font-size: 1.3em; font-family: calibri light; margin-bottom: 15px">Dette</b>
-                        Ceci est votre caisse de penalit&eacute;, plus vous dur&eacute;e avant de remettre un livre une fois la date limite de l'emprunt d&eacute;pass&eacute;, plus votre dette augmente de 500FCFA par jours.
-                        En plus de remettre le livre, vous devrez donner la somme mentionne a la biblioth&eacute;caire comme p&eacute;nalit&eacute;.
-                    </p>
-                    <div class="sc1">
-                        <!-- <input type="submit" value="Oui" name="confirmDisconnect"> -->
-                        <a href="home.php?cote=all">Fermer</a>
-                    </div>
-                </div>               
-            </form>
-        <?php
-            }
-        ?>
+    </div>
+
+    <?php if(isset($_GET['disconnect']) || (isset($_GET['action']) && $_GET['action'] == "showCautionInfo")) { 
+        $isCaution = (isset($_GET['action']) && $_GET['action'] == "showCautionInfo");
+    ?>
+    <div class="confirmBorrow active-backdrop">
+        <div class="dialog-card">
+            <?php if($isCaution) { ?>
+                <div class="dialog-icon warning"><i class="fa fa-circle-exclamation"></i></div>
+                <h3>Règle</h3>
+                <p>Votre pénalité augmente de <strong>500 FCFA</strong> par jour.</p>
+                <div class="dialog-actions">
+                    <a href="home.php?cote=all" class="btn-primary full-width">compris ?</a>
+                </div>
+            <?php } else { ?>
+                <div class="dialog-icon danger"><i class="fa fa-power-off"></i></div>
+                <h3>Se déconnecter?</h3>
+                <p>Êtes-vous sur de vouloir vous déconnecter?</p>
+                <form method="post" class="dialog-actions">
+                    <a href="home.php?cote=all" class="btn-ghost">Annuler</a>
+                    <input type="submit" value="Oui" name="confirmDisconnect" class="btn-danger">
+                </form>
+            <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
+
     <script src="js/home.js"></script>
 </body>
 </html>

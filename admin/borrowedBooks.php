@@ -72,76 +72,113 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/solid.css"/>
-    <link rel="stylesheet" href="css/allemprunts.css"/>
-    <title><?php 
-        if(isset($_SESSION['email'])){
-            echo htmlspecialchars($_SESSION['email']);
-        }
-    ?></title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/dashboard.css"> 
+    <link rel="stylesheet" href="css/allemprunts.css"> <title>Livres Empruntés - <?php echo htmlspecialchars($_SESSION['email']); ?></title>
 </head>
 <body>
-    <div class="toolsmenu">
-        <div class="toolsmenu__header">
-            <span class="toolsmenu__header--userpp">
-                <i class="fa-solid fa-user"></i>
-            </span>
-            <span class="toolsmenu__header--useremail">
-                <?php
-                    echo htmlspecialchars($_SESSION['email']);
-                ?>
-            </span>
-        </div>
-        <div class="toolsmenu__body">
-            <a href="addbook.php"><i class="fa fa-plus"></i> <span class="label">Ajouter un livre</span></a>
-            <a href="dashboard.php"><i class="fa fa-eye"></i> <span class="label">Afficher les livres</span></a>
-            <a href="gereremprunt.php"><i class="fa fa-cloud-download"></i> <span class="label">Gerer les emprunts</span></a>
-            <a href="borrowedBooks.php" class="active"><i class="fa fa-bullseye"></i> <span class="label">Afficher les livres emprunter</span></a>
-            <a href="history.php"><i class="fa fa-history"></i> <span class="label">Historique des emprunts</span></a>
-        </div>
-        <div class="toolsmenu__footer">
-            <a href="index.php?log"><i class="fa fa-sign-out-alt"></i></a>
-        </div>
-    </div>
-    <div class="container">
-        <div class="container__title">
-            <span>Tableau de bord / </span>
-            <a href="borrowedBooks.php" style="margin-left: 2px"> Tous les emprunts</a>
-        </div>
-        <div class="container__option"></div>
-        <div class="container__body">
-            <?php
-            $getPopu = $bdd->query("SELECT * FROM livres WHERE ISBN_livres IN (SELECT isbn_livres FROM emprunt WHERE isok='true')");
-            if($getPopu->rowCount() > 0){
-                while($data = $getPopu->fetch()){ ?>
-                    <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="popubook">
-                        <img src="<?php echo $data["couverture_livres"]?>" alt="livre populaire">
-                        <span class="poptitle"><?php echo $data['titre_livres']; ?></span>
-                        <span class="popauteur"><?php echo $data['auteur_livres']; ?></span>
-                            <button class="">
-                                <i class="fa fa-eye" style="margin-right:5px"></i>
-                                Voir
-                            </button>
-                    </a>
-                <?php
-            }                   
-            }else{ ?>
-                <div class="nothing" style="background-color: transparent; margin: auto; display: flex; flex-direction: column; align-items:center">
-                <img src="assets/img/undraw_No_data_re_kwbl.png" alt="pas de livres">
-                <span>Pas de livres</span>
-                <a href="borrowedBooks.php">Rafraichir la page</a>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
             </div>
-            <?php
-            }
-            ?>
+            <div class="admin-profile">
+                <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                <span class="email-text"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
+            </div>
         </div>
-    </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.php"><i class="fa fa-chart-pie"></i> <span class="label">Vue d'ensemble</span></a></li>
+            <li><a href="addbook.php"><i class="fa fa-plus-circle"></i> <span class="label">Ajouter un livre</span></a></li>
+            <li>
+                <a href="gereremprunt.php" class="notif-link">
+                    <i class="fa fa-list-check"></i> <span class="label">Gérer Emprunts</span>
+                    <?php
+                        $getunreadEmprunt = $bdd->query("SELECT * FROM emprunt WHERE viewedbyhost = false");
+                        if($getunreadEmprunt->rowCount() > 0){
+                            echo '<span class="badge-count">'.$getunreadEmprunt->rowCount().'</span>';
+                        }
+                    ?>
+                </a>
+            </li>
+            <li>
+                <a href="borrowedBooks.php" class="active">
+                    <i class="fa fa-book-reader"></i> <span class="label">Livres Empruntés</span>
+                </a>
+            </li>
+            <li><a href="history.php"><i class="fa fa-clock-rotate-left"></i> <span class="label">Historique</span></a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.php?log" class="logout-btn"><i class="fa fa-arrow-right-from-bracket"></i> <span>Déconnexion</span></a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="page-title">
+                <h1>Livres en Circulation</h1>
+                <p>Liste des ouvrages actuellement empruntés.</p>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <div class="borrowed-grid">
+                <?php
+                // On récupère les livres qui sont actuellement empruntés (isok='true')
+                // DISTINCT pour éviter les doublons si un livre est emprunté plusieurs fois (bien que la requête cible la table livres)
+                $getPopu = $bdd->query("SELECT DISTINCT * FROM livres WHERE ISBN_livres IN (SELECT isbn_livres FROM emprunt WHERE isok='true')");
+                
+                if($getPopu->rowCount() > 0){
+                    while($data = $getPopu->fetch()){ 
+                        // Compter combien d'exemplaires de CE livre sont sortis
+                        $countOut = $bdd->prepare("SELECT COUNT(*) FROM emprunt WHERE isbn_livres = ? AND isok='true'");
+                        $countOut->execute(array($data['ISBN_livres']));
+                        $nbSortis = $countOut->fetchColumn();
+                ?>
+                    <div class="book-card-borrowed">
+                        <div class="card-img-top">
+                            <img src="<?php echo $data["couverture_livres"]?>" alt="Cover">
+                            <span class="badge-borrowed">
+                                <i class="fa fa-users"></i> <?php echo $nbSortis; ?> sorti(s)
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title" title="<?php echo $data['titre_livres']; ?>"><?php echo $data['titre_livres']; ?></h3>
+                            <p class="card-author"><?php echo $data['auteur_livres']; ?></p>
+                            
+                            <a href="book.php?isbn=<?php echo $data["ISBN_livres"]; ?>" class="btn-details">
+                                <i class="fa fa-eye"></i> Détails
+                            </a>
+                        </div>
+                    </div>
+                <?php
+                    }                  
+                }else{ ?>
+                    <div class="empty-state-card">
+                        <img src="assets/img/undraw_No_data_re_kwbl.png" alt="Rien">
+                        <h3>Aucun livre emprunté</h3>
+                        <p>Tous les ouvrages sont actuellement disponibles en rayon.</p>
+                        <a href="borrowedBooks.php" class="btn-refresh"><i class="fa fa-rotate-right"></i> Actualiser</a>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </main>
+
     <script src="js/emprunt.js"></script>
 </body>
 </html>

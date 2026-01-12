@@ -1,6 +1,7 @@
-const deleteButtons = document.querySelectorAll(".container__table--button-container a:last-of-type");
-const msgbox = document.querySelector(".msgbox");
-const cancelBtn = document.querySelector(".cancelBtn");
+const deleteButtons = document.querySelectorAll(".delete-trigger");
+console.log(deleteButtons)
+const msgbox = document.querySelector(".toast-box");
+const cancelBtn = document.querySelector("#cancelDelete");
 const countDown = document.querySelector("#counter");
 const lines = document.querySelectorAll(".save .book_title span");
 const linesAuth = document.querySelectorAll(".save .auth span");

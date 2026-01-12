@@ -9,15 +9,16 @@ const errmsg = document.querySelector(".connexionErrorMsg");
 
 const showErrmsg = (msg, color, time) =>{
     errmsg.innerHTML = msg;
-    errmsg.style.bottom = "5%";
     errmsg.style.backgroundColor = color;
+    errmsg.classList.remove('hidden')
     setTimeout(()=>{
         hideErrmsg();
     }, time);
 }
 const hideErrmsg = () =>{
-    errmsg.style.bottom = "-400px";
+    errmsg.classList.add('hidden')
 }
+
 
 inscriptionBtn.addEventListener("click", (e)=>{
     fullname.style.boxShadow = "0px 0px 16px 2px rgba(100,100,100,0.1)";

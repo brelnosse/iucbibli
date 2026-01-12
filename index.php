@@ -3,52 +3,88 @@
     include("admin/config.php");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/solid.css"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="css/index.css">
-    <title>IUCBibli</title>
+    <title>Connexion - IUCBibli</title>
 </head>
 <body>
-    <div class="redBall"></div>
-    <header class="menu">
-        <a href="inscription.php">S'inscrire</a>
-        <a href="index.php" class="active">Se connecter</a>
-    </header>
-    <?php
-        if(isset($_GET['ref']) AND !empty($_GET['ref'])){ ?>
-         <div class="pop">
-            Connectez-vous pour pouvoir utilisez l'application.
+    
+    <nav class="auth-nav">
+        <div class="logo">
+            <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
+        </div>
+        <div class="nav-links">
+            <a href="inscription.php" class="btn-ghost">S'inscrire</a>
+            <a href="index.php" class="btn-primary">Se connecter</a>
+        </div>
+    </nav>
+
+    <?php if(isset($_GET['ref']) AND !empty($_GET['ref'])){ ?>
+         <div class="alert-box info-float">
+            <i class="fa fa-circle-info"></i>
+            <span>Connectez-vous pour pouvoir utiliser l'application.</span>
          </div>
-    <?php
-        }
-    ?>
-    <div class="form">
-        <div class="form__header">
-            <h1 class="form__header--title">IUCBibli <sub class="session">Etudiant</sub></h1>
+    <?php } ?>
+
+    <main class="auth-container">
+        
+        <div class="auth-illustration">
+            <div class="circle-deco"></div>
+            <h1>Bienvenue sur<br><span class="highlight">IUCBibli</span></h1>
+            <p>Votre portail de bibliothèque numérique.</p>
         </div>
-        <div class="form__body">
-            <div class="form__body--input_box">
-                <label for="fullname">Nom complet<exp>*</exp></label>
-                <input type="text" id="fullname" class="form__body--input" placeholder="Nom complet">
+
+        <div class="auth-form-card">
+            <div class="form-header">
+                <h2>Connexion <span class="badge">Etudiant</span></h2>
+                <p>Entrez vos identifiants pour accéder à votre espace.</p>
             </div>
-            <div class="form__body--input_box">
-                <label for="mat">Matricule<exp>*</exp></label>
-                <input type="text" id="matricule" class="form__body--input" placeholder="Matricule">
+
+            <div class="form-body">
+                <div class="input-group">
+                    <label for="fullname">Nom complet <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa fa-user input-icon"></i>
+                        <input type="text" id="fullname" placeholder="Bryan Mafotsing">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="matricule">Matricule <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa fa-id-card input-icon"></i>
+                        <input type="text" id="matricule" placeholder="IUC23E0081524">
+                    </div>
+                </div>
+
+                <button class="btn-submit form__footer--button">
+                    Se connecter <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="form-footer-link">
+                <a href="admin/index.php" class="admin-link">
+                    <i class="fa fa-user-shield"></i> Accès Administrateur
+                </a>
             </div>
         </div>
-        <div class="form__footer">
-            <button class="form__footer--button"><i class="fa fa-user" style="margin: 8px; font-size: 0.8em"></i>connexion</button>
-        </div>
-    </div>
-    <a href="admin/index.php" class="admin">se connecter en tant qu'administrateur <i class="fa fa-user" style="margin: 5px"></i></a>
-    <div class="connexionErrorMsg">
-        une erreur est survenue
+    </main>
+
+    <div class="connexionErrorMsg hidden">
+        <i class="fa fa-circle-exclamation"></i>
+        <span>Une erreur est survenue</span>
     </div> 
+
     <script src="js/index.js"></script> 
 </body>
 </html>

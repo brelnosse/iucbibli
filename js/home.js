@@ -88,14 +88,23 @@ closereservfen.addEventListener("click", ()=>{
 dcancel.addEventListener("click", ()=>{
     reservationFen.style.display = "none";
 })
-for(let showreservfenbtn of showreservfenbtns){
-    showreservfenbtn.addEventListener("click", (e)=>{
+for (let btn of showreservfenbtns) {
+    btn.addEventListener("click", (e) => {
         reservationFen.style.display = "flex";
-        bookImg.setAttribute("src", e.target.parentNode.parentNode.firstElementChild.src);
-        bookTitle.textContent = e.target.parentNode.id;
-        bookAuteur.textContent = e.target.parentNode.previousElementSibling.id;
-        dadd.id = e.target.id;
-    })
+        
+        const card = e.target.closest('.book-card'); 
+        
+        if (card) {
+            const imgElement = card.querySelector('img');
+            const titleElement = card.querySelector('h3');
+            const authorElement = card.querySelector('h4');
+            
+            if (imgElement) bookImg.setAttribute("src", imgElement.src);
+            if (titleElement) bookTitle.textContent = titleElement.getAttribute('title') || titleElement.textContent;
+            
+            dadd.id = e.target.id; 
+        }
+    });
 }
 alirebtn.addEventListener("click", function(e){
     if(e.target.checked){

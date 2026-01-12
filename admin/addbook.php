@@ -7,81 +7,165 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/solid.css"/>
-    <link rel="stylesheet" href="css/addbook.css">
-    <title><?php echo htmlspecialchars($_SESSION['email']);?></title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/dashboard.css"> <link rel="stylesheet" href="css/addbook.css"> <title>Ajouter un Livre - <?php echo htmlspecialchars($_SESSION['email']);?></title>
 </head>
 <body>
-    <div class="toolsmenu">
-        <div class="toolsmenu__header">
-            <span class="toolsmenu__header--userpp">
-                <i class="fa-solid fa-user"></i>
-            </span>
-            <span class="toolsmenu__header--useremail">
-                <?php
-                    echo htmlspecialchars($_SESSION['email']);
-                ?>
-            </span>
-        </div>
-        <div class="toolsmenu__body">
-            <a href="addbook.php" class="active"><i class="fa fa-plus"></i> <span class="label">Ajouter un livre</span></a>
-            <a href="dashboard.php"><i class="fa fa-eye"></i> <span class="label">Afficher les livres</span></a>
-            <a href="gereremprunt.php">
-                <i class="fa fa-cloud-download"></i> <span class="label">Gerer les emprunts</span>
-                <?php
-                $getunreadEmprunt = $bdd->query("SELECT * FROM emprunt WHERE viewedbyhost = false");
-                $getunread = $getunreadEmprunt->fetch();
 
-                if($getunreadEmprunt->rowCount() > 0){ ?>
-                 <b style="display:inline-flex; height:10px; width: 10px; border-radius: 50px; background-color: #b80000; margin-left: 8px"></b>
-                <?php
-                    }
-                ?>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
+            </div>
+            <div class="admin-profile">
+                <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                <span class="email-text"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="dashboard.php">
+                    <i class="fa fa-chart-pie"></i> <span class="label">Vue d'ensemble</span>
+                </a>
+            </li>
+            <li>
+                <a href="addbook.php" class="active">
+                    <i class="fa fa-plus-circle"></i> <span class="label">Ajouter un livre</span>
+                </a>
+            </li>
+            <li>
+                <a href="gereremprunt.php" class="notif-link">
+                    <i class="fa fa-list-check"></i> <span class="label">Gérer Emprunts</span>
+                    <?php
+                        $getunreadEmprunt = $bdd->query("SELECT * FROM emprunt WHERE viewedbyhost = false");
+                        if($getunreadEmprunt->rowCount() > 0){
+                            echo '<span class="badge-count">'.$getunreadEmprunt->rowCount().'</span>';
+                        }
+                    ?>
+                </a>
+            </li>
+            <li>
+                <a href="borrowedBooks.php">
+                    <i class="fa fa-book-reader"></i> <span class="label">Livres Empruntés</span>
+                </a>
+            </li>
+            <li>
+                <a href="history.php">
+                    <i class="fa fa-clock-rotate-left"></i> <span class="label">Historique</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.php?log" class="logout-btn">
+                <i class="fa fa-arrow-right-from-bracket"></i> <span>Déconnexion</span>
             </a>
-            <a href="borrowedBooks.php"><i class="fa fa-bullseye"></i> <span class="label">Afficher les livres emprunter</span></a>
-            <a href="history.php"><i class="fa fa-history"></i> <span class="label">Historique des emprunts</span></a>
         </div>
-        <div class="toolsmenu__footer">
-            <a href="index.php?log"><i class="fa fa-sign-out-alt"></i></a>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="page-title">
+                <h1>Nouveau Livre</h1>
+                <p>Ajouter une nouvelle référence au catalogue.</p>
+            </div>
+        </header>
+
+        <div class="content-body center-content">
+            <div class="form-card">
+                <div class="form-header-card">
+                    <i class="fa fa-book-medical"></i>
+                    <h2>Informations du Livre</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-column">
+                        <div class="input-group">
+                            <label for="titre">Titre du livre <span class="required">*</span></label>
+                            <input type="text" id="titre" placeholder="Ex: Le Petit Prince">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="auteur">Auteur(s) <span class="required">*</span></label>
+                            <input type="text" id="auteur" placeholder="Ex: Antoine de Saint-Exupéry">
+                        </div>
+
+                        <div class="row-inputs">
+                            <div class="input-group">
+                                <label for="isbn">ISBN (13 chiffres) <span class="required">*</span></label>
+                                <input type="text" id="isbn" placeholder="Ex: 9782070408504" maxlength="13">
+                            </div>
+                            <div class="input-group">
+                                <label for="expl">Stock <span class="required">*</span></label>
+                                <input type="number" id="expl" value="1" min="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-column image-column">
+                        <label>Couverture du livre <span class="required">*</span></label>
+                        
+                        <div class="image-upload-wrapper">
+                            <label for="image" class="imagereview" id="previewContainer">
+                                <div class="upload-content">
+                                    <i class="fa fa-cloud-arrow-up"></i>
+                                    <span>Cliquez pour ajouter</span>
+                                    <small>JPG, PNG (Max 2Mo)</small>
+                                </div>
+                                <img src="" alt="Aperçu" id="imagePreview" class="hidden">
+                            </label>
+                            <input type="file" id="image" accept="image/*" hidden>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="addBookBtn btn-primary-lg">
+                        <i class="fa fa-plus"></i> Enregistrer le livre
+                    </button>
+                </div>
+            </div>
         </div>
+    </main>
+
+    <div class="updateErrorMsg hidden">
+        <i class="fa fa-circle-exclamation"></i>
+        <span>Une erreur est survenue</span>
     </div>
-    <div class="container">
-        <div class="container__title">
-            <span>Tableau de bord / </span>
-            <a href="addbook.php" style="margin-left: 2px"> nouveau livre</a>
-        </div>
-        <div class="container__body">
-            <div class="redBall"></div>
-            <div class="redBallp"></div>
-            <div class="newBook__form">
-                <label for="titre">Titre<exp>*</exp></label>
-                <input type="text" id="titre" placeholder="Titre du livre">
-                <label for="auteur">Auteur<exp>*</exp></label>
-                <input type="text" id="auteur" placeholder="Nom de(s) auteur(s)">
-                <label for="isbn">ISBN du livre (13) chiffres<exp>*</exp></label>
-                <input type="text" id="isbn" placeholder="ISBN du livre">
-                <label for="expl">Nombre d'exemplaire<exp>*</exp></label>
-                <input type="number" id="expl" value="0">
-                <label for="nothing">Premier de couverture<exp>*</exp></label>
-                <label for="image" class="imagereview">
-                    <i class="fa fa-camera-alt"></i>
-                </label>
-                <input type="file" id="image" style="display: none">
-                <button class="addBookBtn">
-                    <i class="fa fa-plus-circle"></i> Ajouter le livre 
-                </button>
-            </div>
-            <div class="updateErrorMsg">
-                une erreur est survenue
-            </div>
-        </div>
-    </div>  
-    <script src="js/addbook.js"></script>  
+
+    <script src="js/addbook.js"></script>
+    
+    <script>
+        const imageInput = document.getElementById('image');
+        const previewImg = document.getElementById('imagePreview');
+        const uploadContent = document.querySelector('.upload-content');
+
+        if(imageInput){
+            imageInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.classList.remove('hidden');
+                        uploadContent.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

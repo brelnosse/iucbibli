@@ -3,73 +3,120 @@
     include("admin/config.php");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="admin/assets/fontawesome-free-6.5.2-web/css/solid.css"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="css/inscription.css">
-    <title>IUCBibli</title>
+    <title>Inscription - IUCBibli</title>
 </head>
 <body>
-    <div class="redBall"></div>
-    <header class="menu">
-        <a href="inscription.php" class="active">S'inscrire</a>
-        <a href="index.php">Se connecter</a>
-    </header>
-    <div class="form">
-        <div class="form__header">
-            <h1 class="form__header--title">IUCBibli <sub class="session">Etudiant</sub></h1>
+    
+    <nav class="auth-nav">
+        <div class="logo">
+            <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
         </div>
-        <div class="form__body">
-            <div class="form__body--input_box">
-                <label for="fullname">Nom complet<exp>*</exp></label>
-                <input type="text" id="fullname" class="form__body--input" placeholder="Nom complet">
+        <div class="nav-links">
+            <span class="nav-text">Déjà un compte ?</span>
+            <a href="index.php" class="btn-ghost">Se connecter</a>
+        </div>
+    </nav>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="form-header">
+                <h2>Créer un compte <span class="badge">Etudiant</span></h2>
+                <p>Remplissez le formulaire pour accéder à la bibliothèque.</p>
             </div>
-            <div class="form__body--input_box">
-                <label for="mat">Matricule<exp>*</exp></label>
-                <input type="text" id="matricule" class="form__body--input" placeholder="Matricule">
-            </div>
-            <div class="form__body--input_box">
-                <label for="ecole">&eacute;cole<exp>*</exp></label>
-                <select name="ecole" id="ecole" class="form__body--input">
-                    <option value="none">S&eacute;lectionner votre &eacute;cole</option>
-                    <option value="3iac">3IAC</option>
-                    <option value="istdi">ISTDI</option>
-                    <option value="pisti">PISTI</option>
-                    <option value="icia">ICIA</option>
-                    <option value="seas">SEAS</option>
-                </select>
-            </div>
-            <div class="form__body--input_box">
-                <label for="niveau">Niveau<exp>*</exp></label>
-                <select name="niveau" id="niveau" class="form__body--input">
-                    <option value="none">S&eacute;lectionner votre niveau</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div class="form__body--input_box">
-                <label for="email">E-mail (optionel)</label>
-                <input type="email" id="email" class="form__body--input" placeholder="E-mail">
-            </div>
-            <div class="form__body--input_box">
-                <label for="phone">Num&eacute;ro de t&eacute;l&eacute;phone<exp>*</exp></label>
-                <input type="phone" id="phone" class="form__body--input" placeholder="Ex: 6xxxxxxxx">
+
+            <div class="form-body">
+                <div class="form-grid">
+                    
+                    <div class="input-group">
+                        <label for="fullname">Nom complet <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-user input-icon"></i>
+                            <input type="text" id="fullname" placeholder="Bryan Mafotsing">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="matricule">Matricule <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-id-card input-icon"></i>
+                            <input type="text" id="matricule" placeholder="IUC23E0081254">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ecole">École <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-graduation-cap input-icon"></i>
+                            <select name="ecole" id="ecole">
+                                <option value="none" disabled selected>Sélectionner...</option>
+                                <option value="3iac">3IAC</option>
+                                <option value="istdi">ISTDI</option>
+                                <option value="pisti">PISTI</option>
+                                <option value="icia">ICIA</option>
+                                <option value="seas">SEAS</option>
+                            </select>
+                            <i class="fa fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="niveau">Niveau <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-layer-group input-icon"></i>
+                            <select name="niveau" id="niveau">
+                                <option value="none" disabled selected>Sélectionner...</option>
+                                <option value="1">Niveau 1</option>
+                                <option value="2">Niveau 2</option>
+                                <option value="3">Niveau 3</option>
+                                <option value="4">Niveau 4</option>
+                                <option value="5">Niveau 5</option>
+                            </select>
+                            <i class="fa fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">E-mail <span class="optional">(Optionnel)</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-envelope input-icon"></i>
+                            <input type="email" id="email" placeholder="exemple@email.com">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="phone">Téléphone <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa fa-phone input-icon"></i>
+                            <input type="phone" id="phone" placeholder="Ex: 6xxxxxxxx">
+                        </div>
+                    </div>
+
+                </div> <div class="form-footer">
+                    <button class="btn-submit form__footer--button">
+                        S'inscrire maintenant <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="form__footer">
-            <button class="form__footer--button">S'inscrire</button>
-        </div>
-    </div>
-    <div class="connexionErrorMsg">
-        une erreur est survenue
-    </div>   
+    </main>
+
+    <div class="connexionErrorMsg hidden">
+        <i class="fa fa-circle-exclamation"></i>
+        <span>Une erreur est survenue</span>
+    </div> 
+
     <script src="js/inscription.js"></script> 
 </body>
 </html>

@@ -11,17 +11,18 @@ const prev = document.querySelector(".book__form--body-rightSide");
 titre.disabled = false;
 titre.focus();
 
-const showErrmsg = (msg, color) =>{
+const showErrmsg = (msg, color, time) =>{
     errmsg.innerHTML = msg;
-    errmsg.style.bottom = "5%";
     errmsg.style.backgroundColor = color;
+    errmsg.classList.remove('hidden')
     setTimeout(()=>{
         hideErrmsg();
-    }, 4000);
+    }, time);
 }
 const hideErrmsg = () =>{
-    errmsg.style.bottom = "-120%";
+    errmsg.classList.add('hidden')
 }
+
 
 titrebtn.addEventListener("click", (e)=>{
     titre.disabled = false;

@@ -3,16 +3,18 @@ const sendFormButton = document.querySelector(".form__footer--button"),
       ucode = document.querySelector("input#ucode"),
       errmsg = document.querySelector(".connexionErrorMsg");
     
-const showErrmsg = (msg) =>{
+const showErrmsg = (msg, color, time) =>{
     errmsg.innerHTML = msg;
-    errmsg.style.top = "90%";
+    errmsg.style.backgroundColor = color;
+    errmsg.classList.remove('hidden')
     setTimeout(()=>{
         hideErrmsg();
-    }, 7000);
+    }, time);
 }
 const hideErrmsg = () =>{
-    errmsg.style.top = "120%";
+    errmsg.classList.add('hidden')
 }
+
 let emailIsOk = false;
 email.focus();
 email.addEventListener("input", (e)=>{

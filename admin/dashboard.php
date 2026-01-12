@@ -6,183 +6,216 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/solid.css"/>
-    <link rel="stylesheet" href="assets/aos-2/dist/aos.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    
     <link rel="stylesheet" href="css/dashboard.css"/>
-    <title><?php 
-        if(isset($_SESSION['email'])){
-            echo htmlspecialchars($_SESSION['email']);
-        }
-    ?></title>
+    <title>Dashboard Admin - <?php echo htmlspecialchars($_SESSION['email']); ?></title>
 </head>
 <body>
-    <div class="toolsmenu">
-        <div class="toolsmenu__header">
-            <span class="toolsmenu__header--userpp">
-                <i class="fa-solid fa-user"></i>
-            </span>
-            <span class="toolsmenu__header--useremail">
-                <?php
-                    echo htmlspecialchars($_SESSION['email']);
-                ?>
-            </span>
-        </div>
-        <div class="toolsmenu__body">
-            <a href="addbook.php"><i class="fa fa-plus"></i> <span class="label">Ajouter un livre</span></a>
-            <a href="dashboard.php" class="active"><i class="fa fa-eye"></i> <span class="label">Afficher les livres</span></a>
-            <a href="gereremprunt.php"><i class="fa fa-cloud-download"></i> <span class="label">Gerer les emprunts</span> 
-            <?php
-                $getunreadEmprunt = $bdd->query("SELECT * FROM emprunt WHERE viewedbyhost = false");
-                $getunread = $getunreadEmprunt->fetch();
 
-                if($getunreadEmprunt->rowCount() > 0){ ?>
-                 <b id="<?php echo $getunreadEmprunt->rowCount(); ?>" class="bbull" style="display:inline-flex; height:10px; width: 10px; border-radius: 50px; background-color: #b80000; margin-left: 8px"></b>
-                <script>
-                    const bbull = document.querySelector(".bbull");
-
-                    if(Notification.permission === "granted"){
-                        new Notification("Emprunt de livres ", {
-                            body: "Vous avez " + bbull.id + (parseInt(bbull.id) > 1 ? " nouveaux emprunts de livres" : " nouvel emprunt de livre")
-                        });          
-                    }else{
-                        Notification.requestPermission()
-                            .then(permission =>{
-                                if(permission === "granted"){
-                                    new Notification("Emprunt de livres ", {
-                                        body: "Vous avez " + bbull.id + (parseInt(bbull.id) > 1 ? " nouveaux emprunts de livres" : " nouvel emprunt de livre")
-                                    });
-                                }
-                            })
-                    }
-                </script>
-            <?php
-                }
-            ?>
-             </a>
-            <a href="borrowedBooks.php"><i class="fa fa-bullseye"></i> <span class="label">Afficher les livres emprunter</span></a>
-            <a href="history.php"><i class="fa fa-history"></i> <span class="label">Historique des emprunts</span></a>
-        </div>
-        <div class="toolsmenu__footer">
-            <a href="index.php?log"><i class="fa fa-sign-out-alt"></i></a>
-        </div>
-    </div>
-    <div class="container">
-        <div class="container__title">
-            <span>Tableau de bord / </span>
-            <a href="dashboard.php" style="margin-left: 2px"> Tous les lives</a>
-        </div>
-        <form method="post" class="container__option">
-            <p>Rechercher un livre</p>
-            <div class="searchContainer">
-                <input type="text" name="search" placeholder="Entrez un titre ou un auteur" value="<?php 
-                    if(isset($_POST['search'])){
-                        echo htmlspecialchars($_POST['search']);
-                    }
-                ?>">
-                <input type="submit" name="research" value="Rechercher">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
             </div>
-        </form>
-        <div class="container__body">
-            <!-- <h1 style="background-color: white; color: #850000; width: 98%; padding: 20px 20px;margin: 10px auto;border-radius: 15px; font-family: calibri">Tout les livres</h1> -->
+            <div class="admin-profile">
+                <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                <span class="email-text"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
+            </div>
+        </div>
 
-            <table class="container__table">
-                <tr class="container__body--titles-container">
-                    <th class="container__body--title">Titre</th>
-                    <th class="container__body--title">Auteur</th>
-                    <th class="container__body--title">popularit&eacute;s</th>
-                    <th class="container__body--title">Date d'ajout</th>
-                    <th class="container__body--title">Exemplaires</th>
-                    <th class="container__body--title">Action</th>
-                </tr>
-                <?php 
-                    $count = 0;
-                    $getBooks;
-                    if(isset($_POST['research'])){
-                        if(isset($_POST['search']) AND !empty($_POST['search'])){
-                            $getBooks = $bdd->query("SELECT * FROM livres WHERE titre_livres LIKE '%".htmlspecialchars($_POST['search'])."%' OR auteur_livres LIKE '%".htmlspecialchars($_POST['search'])."%'");
-                        }else{
-                            $getBooks = $bdd->query("SELECT * FROM livres");
+        <ul class="sidebar-menu">
+            <li>
+                <a href="dashboard.php" class="active">
+                    <i class="fa fa-chart-pie"></i> <span class="label">Vue d'ensemble</span>
+                </a>
+            </li>
+            <li>
+                <a href="addbook.php">
+                    <i class="fa fa-plus-circle"></i> <span class="label">Ajouter un livre</span>
+                </a>
+            </li>
+            <li>
+                <a href="gereremprunt.php" class="notif-link">
+                    <i class="fa fa-list-check"></i> <span class="label">Gérer Emprunts</span>
+                    <?php
+                        $getunreadEmprunt = $bdd->query("SELECT * FROM emprunt WHERE viewedbyhost = false");
+                        if($getunreadEmprunt->rowCount() > 0){
+                            echo '<span class="badge-count" id="notif-count">'.$getunreadEmprunt->rowCount().'</span>';
                         }
-                    }else{
-                        $getBooks = $bdd->query("SELECT * FROM livres");
-                    }
+                    ?>
+                </a>
+            </li>
+            <li>
+                <a href="borrowedBooks.php">
+                    <i class="fa fa-book-reader"></i> <span class="label">Livres Empruntés</span>
+                </a>
+            </li>
+            <li>
+                <a href="history.php">
+                    <i class="fa fa-clock-rotate-left"></i> <span class="label">Historique</span>
+                </a>
+            </li>
+        </ul>
 
-                    if($getBooks->rowCount() > 0){
-                        while($book = $getBooks->fetch()){ ?> 
-                    <tr class="save">
-                        <td class="book_title">
-                            <span><?php echo $book["titre_livres"]; ?></span>
-                        </td>
-                        <td class="auth">
-                           <span><?php echo $book["auteur_livres"]; ?></span>
-                        </td>
-                        <td>
+        <div class="sidebar-footer">
+            <a href="index.php?log" class="logout-btn">
+                <i class="fa fa-arrow-right-from-bracket"></i> <span>Déconnexion</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="page-title">
+                <h1>Tableau de bord</h1>
+                <p>Gestion de la bibliothèque</p>
+            </div>
+            
+            <form method="post" class="search-box">
+                <i class="fa fa-search"></i>
+                <input type="text" name="search" placeholder="Rechercher un livre, auteur..." value="<?php if(isset($_POST['search'])) echo htmlspecialchars($_POST['search']); ?>">
+            </form>
+        </header>
+
+        <div class="content-body">
+            
+            <div class="stats-cards" data-aos="fade-up">
+                <div class="card stat-card">
+                    <div class="icon bg-purple"><i class="fa fa-book"></i></div>
+                    <div class="info">
+                        <h3>Total Livres</h3>
+                        <span>
                             <?php 
-                                if($book["cote_livres"] >= 100){ ?>
-                                <span class="badge tpopulaire"><i class="fa fa-face-grin-stars" style="margin-right: 3px"></i> Tr&egrave;s Populaire</span>
-                            <?php
-                                }elseif($book["cote_livres"] > 30 AND $book["cote_livres"] < 100){ ?>
-                                <span class="badge populaire"><i class="fa fa-smile-beam" style="margin-right: 3px"></i> populaire</span>
-                            <?php
-                                }else{ ?>
-                                <span class="badge npopulaire"><i class="fa fa-meh-rolling-eyes" style="margin-right: 3px"></i> pas populaire</span>
-                            <?php
-                                }
+                                $countBooks = $bdd->query("SELECT SUM(nbre_livres) FROM livres")->fetchColumn();
+                                echo $countBooks ? $countBooks : 0; 
                             ?>
-                        </td>
-                        <td>
-                            <?php echo $book["date_ajout_livres"]; ?>
-                        </td>
-                        <td class="num">
-                            <?php echo $book["nbre_livres"]; ?>
-                        </td>
-                        <td class="container__table--button-container">
-                            <a href="book.php?isbn=<?php echo $book['ISBN_livres']; ?>" class="see"><i class="fa fa-eye"></i></a>
-                            <a href="update.php?isbn=<?php echo $book['ISBN_livres']; ?>"  class="set"><i class="fa fa-pen-to-square"></i></a>
-                            <a href=""  class="delete" id="<?php echo $book["ISBN_livres"]; ?>"><i class="fa fa-trash"></i></a>
-                        </td>
-                    </tr>
-                <?php
-                        $count++;
+                        </span>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="icon bg-red"><i class="fa fa-hand-holding-hand"></i></div>
+                    <div class="info">
+                        <h3>Emprunts Actifs</h3>
+                        <span>
+                            <?php 
+                                $countLoan = $bdd->query("SELECT COUNT(*) FROM emprunt WHERE isok = 'true'")->fetchColumn();
+                                echo $countLoan; 
+                            ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-                }
-                    }else{ ?>
-                <tr>
-                    <td colspan="6" class="nothing">
-                        <img src="assets/img/undraw_No_data_re_kwbl.png" width="250" alt="">
-                        <span style="color: #b60000; margin-top: 15px">aucun livre...</span>
-                    </td>
-                </tr>
-                <?php
-                    }
-                ?>
-            </table>
-            <div class="statitics">
-                <h1 style="background-color: white; color: #850000;">Les plus emprunt&eacute;s</h1>
-                <div class="chartContainer">
-                    <canvas id="barContainer" aria-label="chart" role="img"></canvas>
+            <div class="card table-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-header">
+                    <h2>Inventaire des Livres</h2>
+                    <a href="addbook.php" class="btn-sm btn-primary"><i class="fa fa-plus"></i> Nouveau</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Auteur</th>
+                                <th>Popularité</th>
+                                <th>Date Ajout</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                            $getBooks;
+                            if(isset($_POST['research']) && !empty($_POST['search'])){
+                                $getBooks = $bdd->query("SELECT * FROM livres WHERE titre_livres LIKE '%".htmlspecialchars($_POST['search'])."%' OR auteur_livres LIKE '%".htmlspecialchars($_POST['search'])."%'");
+                            }else{
+                                $getBooks = $bdd->query("SELECT * FROM livres ORDER BY date_ajout_livres DESC");
+                            }
+
+                            if($getBooks->rowCount() > 0){
+                                while($book = $getBooks->fetch()){ 
+                        ?> 
+                            <tr>
+                                <td class="fw-bold text-dark"><?php echo $book["titre_livres"]; ?></td>
+                                <td class="text-muted"><?php echo $book["auteur_livres"]; ?></td>
+                                <td>
+                                    <?php if($book["cote_livres"] >= 100){ ?>
+                                        <span class="badge badge-purple"><i class="fa fa-star"></i> Top</span>
+                                    <?php }elseif($book["cote_livres"] > 30){ ?>
+                                        <span class="badge badge-blue"><i class="fa fa-thumbs-up"></i> Populaire</span>
+                                    <?php }else{ ?>
+                                        <span class="badge badge-gray">Standard</span>
+                                    <?php } ?>
+                                </td>
+                                <td><?php echo date('d/m/Y', strtotime($book["date_ajout_livres"])); ?></td>
+                                <td><span class="stock-num"><?php echo $book["nbre_livres"]; ?></span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="book.php?isbn=<?php echo $book['ISBN_livres']; ?>" class="btn-icon view" title="Voir"><i class="fa fa-eye"></i></a>
+                                        <a href="update.php?isbn=<?php echo $book['ISBN_livres']; ?>" class="btn-icon edit" title="Modifier"><i class="fa fa-pen"></i></a>
+                                        <a href="" class="btn-icon delete delete-trigger" id="<?php echo $book["ISBN_livres"]; ?>" data-isbn="<?php echo $book["ISBN_livres"]; ?>" title="Supprimer"><i class="fa fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php 
+                                }
+                            } else { 
+                        ?>
+                            <tr>
+                                <td colspan="6" class="empty-row">
+                                    <img src="assets/img/undraw_No_data_re_kwbl.png" alt="Aucun livre"> <p>Aucun livre trouvé dans la bibliothèque.</p>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card chart-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-header">
+                    <h2>Statistiques d'Emprunts</h2>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="barContainer"></canvas>
                 </div>
             </div>
         </div>
+    </main>
+
+    <div class="toast-box hidden" id="deleteToast">
+        <div class="toast-content">
+            <i class="fa fa-circle-exclamation"></i>
+            <div>
+                <h4>Confirmation</h4>
+                <p>Cette action est irréversible.</p>
+            </div>
+        </div>
+        <div class="toast-actions">
+            <button class="btn-cancel" id="cancelDelete">Annuler (<span id="counter">5</span>s)</button>
+            <button class="btn-confirm-delete" id="confirmDelete">Supprimer</button>
+        </div>
     </div>
-    <div class="msgbox">
-        <p>Cette action est irr&eacute;versible</p>
-        <span class="cancelBtn">
-            Annuler 
-            <span id="counter">5s</span>
-        </span>
-    </div>
-    <script src="assets/aos-2/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         AOS.init();
     </script>
-    <script src="js/chart.min.js"></script>
     <script src="js/dashboard.js"></script>
+
 </body>
 </html>

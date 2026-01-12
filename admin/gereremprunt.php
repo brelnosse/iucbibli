@@ -122,268 +122,261 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/brands.css"/>
-    <link rel="stylesheet" href="assets/fontawesome-free-6.5.2-web/css/solid.css"/>
-    <link rel="stylesheet" href="css/emprunt.css"/>
-    <title><?php 
-        if(isset($_SESSION['email'])){
-            echo htmlspecialchars($_SESSION['email']);
-        }
-    ?></title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/dashboard.css"/> <link rel="stylesheet" href="css/emprunt.css"/>   <title>Gérer Emprunts - <?php echo htmlspecialchars($_SESSION['email']); ?></title>
+    <link rel="stylesheet" href="css/emprunt.css"/> <link rel="stylesheet" href="css/emprunt.css"/>   <title>Gérer Emprunts - <?php echo htmlspecialchars($_SESSION['email']); ?></title>
 </head>
 <body>
-    <div class="toolsmenu">
-        <div class="toolsmenu__header">
-            <span class="toolsmenu__header--userpp">
-                <i class="fa-solid fa-user"></i>
-            </span>
-            <span class="toolsmenu__header--useremail">
-                <?php
-                    echo htmlspecialchars($_SESSION['email']);
-                ?>
-            </span>
-        </div>
-        <div class="toolsmenu__body">
-            <a href="addbook.php"><i class="fa fa-plus"></i> <span class="label">Ajouter un livre</span></a>
-            <a href="dashboard.php"><i class="fa fa-eye"></i> <span class="label">Afficher les livres</span></a>
-            <a href="gereremprunt.php" class="active"><i class="fa fa-cloud-download"></i> <span class="label">Gerer les emprunts</span></a>
-            <a href="borrowedBooks.php"><i class="fa fa-bullseye"></i> <span class="label">Afficher les livres emprunter</span></a>
-            <a href="history.php"><i class="fa fa-history"></i> <span class="label">Historique des emprunts</span></a>
-        </div>
-        <div class="toolsmenu__footer">
-            <a href="index.php?log"><i class="fa fa-sign-out-alt"></i></a>
-        </div>
-    </div>
-    <div class="container">
-        <div class="container__title">
-            <span>Tableau de bord / </span>
-            <a href="dashboard.php" style="margin-left: 2px"> Tous les emprunts</a>
-        </div>
-        <div class="container__option">
-        <form method="post" class="container__option">
-            <div class="row">
-                <p>Rechercher un emprunt</p>
-                <div class="searchContainer">
-                    <input type="text" name="search" placeholder="Entrez un nom ou num&eacute;ro de telephone" value="<?php 
-                        if(isset($_POST['search'])){
-                            echo htmlspecialchars($_POST['search']);
-                        }
-                    ?>">
-                    <input type="submit" name="research" value="Rechercher">
-                </div>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-book-open-reader"></i> <span>IucBibli</span>
             </div>
-            <div class="row">
-                <p>Rechercher un emprunt en fonction d'une date</p>
-                <div class="searchContainer">
-                    <input type="date" name="date" placeholder="Entrez une date" value="<?php 
-                        if(isset($_POST['date'])){
-                            echo htmlspecialchars($_POST['date']);
-                        }
-                    ?>">
-                    <input type="submit" name="apply" value="Appliquer">
-                </div>
+            <div class="admin-profile">
+                <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                <span class="email-text"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
             </div>
-        </form>
         </div>
-        <div class="container__body">
-            <table class="container__table">
-                <tr class="container__body--titles-container">
-                    <th class="container__body--title">Titre</th>
-                    <th class="container__body--title">nom etudiant</th>
-                    <th class="container__body--title">Numero de telephone</th>
-                    <th class="container__body--title">Date de debut</th>
-                    <th class="container__body--title">Date de fin</th>
-                    <th class="container__body--title">Statut</th>
-                    <th class="container__body--title">Action</th>
-                </tr>
-                <?php 
-                    $count = 0;
-                    $getBooks;
-                    if(isset($_POST['research'])){
-                        if(isset($_POST['search']) AND !empty($_POST['search'])){
-                            $getBooks = $bdd->query("SELECT * FROM emprunt WHERE nom_etudiant LIKE '%".htmlspecialchars($_POST['search'])."%' OR numero_etudiant LIKE '%".htmlspecialchars($_POST['search'])."%'");
-                        }else{
-                            $getBooks = $bdd->query("SELECT * FROM emprunt");
-                        }
-                    }else{
-                        if(isset($_POST['apply'])){
-                            if(isset($_POST['date']) AND !empty($_POST['date'])){
-                                $getBooks = $bdd->prepare("SELECT * FROM emprunt WHERE date_debut = ? OR date_fin = ?");
-                                $getBooks->execute(array(htmlspecialchars($_POST['date']), htmlspecialchars($_POST['date'])));
-                            }else{
-                                $getBooks = $bdd->query("SELECT * FROM emprunt");
-                            }
-                        }else{
-                            $getBooks = $bdd->query("SELECT * FROM emprunt");
-                        }
-                    }
 
-                    if($getBooks->rowCount() > 0){
-                        while($book = $getBooks->fetch()){ ?> 
-                    <tr class="save">
-                        <td class="book_title">
-                            <a href="book.php?isbn=<?php echo $book["isbn_livres"]; ?>" style="text-decoration: none; color: #b80000">
-                                <?php
-                                    $getnom = $bdd->prepare("SELECT titre_livres FROM livres WHERE ISBN_livres = ?");
-                                    $getnom->execute(array(htmlentities($book["isbn_livres"])));
-                                    $getBookTitle = $getnom->fetch();
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.php"><i class="fa fa-chart-pie"></i> <span class="label">Vue d'ensemble</span></a></li>
+            <li><a href="addbook.php"><i class="fa fa-plus-circle"></i> <span class="label">Ajouter un livre</span></a></li>
+            <li>
+                <a href="gereremprunt.php" class="active notif-link">
+                    <i class="fa fa-list-check"></i> <span class="label">Gérer Emprunts</span>
+                </a>
+            </li>
+            <li><a href="borrowedBooks.php"><i class="fa fa-book-reader"></i> <span class="label">Livres Empruntés</span></a></li>
+            <li><a href="history.php"><i class="fa fa-clock-rotate-left"></i> <span class="label">Historique</span></a></li>
+        </ul>
 
-                                    echo $getBookTitle['titre_livres'];
-                                ?>
-                            </a>
-                        </td>
-                        <td class="auth">
-                           <span><?php echo $book["nom_etudiant"]; ?></span>
-                        </td>
-                        <td>
-                            <?php 
-                                echo $book["numero_etudiant"];
-                            ?>
-                        </td>
-                        <td>
-                            <?php echo $book["date_debut"]; ?>
-                        </td>
-                        <td class="num">
-                            <?php 
-                                if($book['isok'] == 'true'){
-                                    $dateFin = new DateTime($book["date_fin"]);
-                                    $todayDate = new DateTime(date("Y/m/d"));
-                                    $interval = $dateFin->diff($todayDate);
-                                    
-                                    if($dateFin == $todayDate){
-                                        echo "<span style='color: rgba(150,0,0)'><i class='fa fa-triangle-exclamation'></i> L'emprunt prend fin aujourd'hui</span> <br>- <i style='font-weight: 100; font-size: 0.8em'>".$interval->days." jour(s) restant</i>";
-                                    }elseif($dateFin < $todayDate){
-                                        $getUserCaution = $bdd->prepare("SELECT * FROM caution WHERE mat_etu = ?");
-                                        $getUserCaution->execute(array($book['matricule_etudiant']));
-                            
-                                        if($getUserCaution->rowCount() == 0){
-                                            $AddCaution = $bdd->prepare("INSERT INTO caution(mat_etu, nom_etu, caution, date_dernier_ajout) VALUES(?, ?, ?, CURDATE())");
-                                            $AddCaution->execute(array($book['matricule_etudiant'], $book["nom_etudiant"], 500*$interval->days));
-                                        }else{
-                                            $updateCaution = $bdd->prepare("UPDATE caution SET caution =  caution* ".$interval->days.", date_dernier_ajout = CURDATE() WHERE mat_etu = ? AND date_dernier_ajout != CURDATE()");
-                                            $updateCaution->execute(array($book['matricule_etudiant']));
-                                        }
-                                        echo "<s tyle='color: rgba(100,0,0)><i class='fa fa-info-circle'></i> Emprunt terminer depuis le ".$book["date_fin"]."</s><br>";
-                                    }else{
-                                        if($interval->days == 1){
-                                            echo "<span style='color: rgba(100,0,0)'>Il manque 1 jours</span><br>- <i style='font-weight: 100; font-size: 0.8em'>".$interval->days." jour(s) restant</i>";
-                                        }else{
-                                            echo "<span>Se termine le ".$book["date_fin"]."</span><br>- <i style='font-weight: 100; font-size: 0.8em'>".$interval->days." jour(s) restant</i>"; 
-                                        }
-                                    }
-                                }else{
-                                    echo "<span>".$book["date_fin"]."</span>"; 
-                                    
-                                }
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                if($book['isok'] == 'false'){ ?>
-                                    <span class="badge" style="background-color: #b80000">En attente...</span>
-                            <?php
-                                }else{ ?>
-                                    <span class="badge" style="background-color: rgba(0,150,0)">Emprunter <i class="fa fa-check-circle" style="margin-left: 10px"></i></span>
-                            <?php
-                                }
-                            ?>
-                        </td>
-                        <td class="container__table--button-container">
-                            <?php
-                                if($book['isok'] == 'false'){ ?>
-                                    <a href="gereremprunt.php?msg_type=<?php echo sha1($book["id"]); ?>&stu_mat=<?php echo $book["matricule_etudiant"]; ?>"  class="accept" id="<?php echo $book["id"]; ?>"><i class="fa fa-check-circle"></i></a>
-                                    <a href="gereremprunt.php?action=delete&id=<?php echo sha1($book["id"]); ?>&isbn=<?php echo sha1($book["isbn_livres"]); ?>&nom=<?php echo $book["nom_etudiant"]; ?>&phone=<?php echo $book["numero_etudiant"]; ?>&debut=<?php echo $book["date_debut"]; ?>&fin=<?php echo $book["date_fin"]; ?>"  class="denied" id="<?php echo $book["id"]; ?>"><i class="fa fa-times-circle"></i></a>
-                            <?php
-                                }else{ ?>
-                                    <a href="book.php?isbn=<?php echo $book["isbn_livres"]; ?>" ><i class="fa fa-eye"></i></a>
-                                    <?php
-                                        $endDate = new DateTime($book["date_fin"]);
-                                        $today = new DateTime(date("Y/m/d"));
-
-                                        if($today == $endDate){ ?>
-                                            <a href="gereremprunt.php?id=<?php echo sha1($book["id"]); ?>&isbn=<?php echo sha1($book["isbn_livres"]); ?>&nom=<?php echo $book["nom_etudiant"]; ?>&phone=<?php echo $book["numero_etudiant"]; ?>&debut=<?php echo $book["date_debut"]; ?>&fin=<?php echo $book["date_fin"]; ?>" style="background-color: rgb(0,90,0)" title="Confirmer le retour"><i class="fa fa-share"></i></a>
-                                    <?php
-                                        }elseif($today > $endDate){ ?>
-                                            <a href="gereremprunt.php?id=<?php echo sha1($book["id"]); ?>&isbn=<?php echo sha1($book["isbn_livres"]); ?>&nom=<?php echo $book["nom_etudiant"]; ?>&phone=<?php echo $book["numero_etudiant"]; ?>&debut=<?php echo $book["date_debut"]; ?>&fin=<?php echo $book["date_fin"]; ?>&caution=<?php echo $book["id"]; ?>" style="background-color: rgb(0,90,0)" title="Confirmer le retour avec caution"><i class="fa fa-share"></i></a>
-                                    <?php
-                                        }
-                                    ?>
-                            <?php
-                                }
-                            ?>
-                        </td>
-                    </tr>
-                <?php
-                        }
-                    }else{ ?>
-                <tr>
-                    <td colspan="7" class="nothing">
-                        <img src="assets/img/undraw_No_data_re_kwbl.png" width="250" alt="">
-                        <span style="color: #b60000; margin-top: 15px">aucune nouvelle emprunt .</span>
-                    </td>
-                </tr>
-                <?php
-                    }
-                ?>
-            </table>
+        <div class="sidebar-footer">
+            <a href="index.php?log" class="logout-btn"><i class="fa fa-arrow-right-from-bracket"></i> <span>Déconnexion</span></a>
         </div>
-    </div>
-    <?php
-        if(isset($_GET['msg_type']) AND !empty($_GET['msg_type'])){ ?>
-            <form method="post" class="confirmBorrow">
-                <div class="c1">
-                    <p>Une fois que vous avez accepter l'emprunt, vous ne pouvez plus revenir dessus.</p>
-                    <div class="sc1">
-                        <input type="submit" value="confirmer" name="confirmEmprunt">
-                        <a href="gereremprunt.php">annuler</a>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="page-title">
+                <h1>Gestion des Emprunts</h1>
+                <p>Validez les demandes et suivez les retours.</p>
+            </div>
+        </header>
+
+        <div class="content-body">
+            
+            <div class="filter-card">
+                <form method="post" class="filter-form">
+                    <div class="filter-group">
+                        <label><i class="fa fa-magnifying-glass"></i> Par Nom/Tél</label>
+                        <div class="input-wrapper">
+                            <input type="text" name="search" placeholder="Ex: Jean Dupont..." value="<?php if(isset($_POST['search'])) echo htmlspecialchars($_POST['search']); ?>">
+                            <button type="submit" name="research" class="btn-filter">Chercher</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        <?php
-        }
-        if(isset($_GET['id']) AND !empty($_GET['id'])){
-            $msg = "";
-            if(isset($_GET['caution']) AND !empty($_GET['caution'])){ 
-                $getCaution = $bdd->prepare("SELECT caution FROM caution WHERE mat_etu IN (SELECT matricule_etudiant FROM emprunt  WHERE id = ?)");
-                $getCaution->execute(array($_GET['caution']));
-
-                if($getCaution->rowCount() > 0){
-                    $getCautionAmount = $getCaution->fetch();
-                    $msg = "Ce livre a ete rendu avec un retard, assurer vous de pecevoir un montant de ".$getCautionAmount['caution']." FCFA avant de remettre la carte d'identite et de confirmer le retour du livre.";
-                }
-            }else{
-                $msg = "Etes-vous vraiment sur que le livre a ete rendu ?";
-            }
-            ?>
-                <form method="POST" class="confirmBorrow">
-                    <div class="c1" style="height: auto">
-                        <p style="background-color: transparent; display: flex;align-items: center"><?= $msg ?></p>
-                        <div class="sc1">
-                            <input type="submit" value="confirmer le retour" name="confirmReturn">
-                            <a href="gereremprunt.php">annuler</a>
+                    <div class="filter-group">
+                        <label><i class="fa fa-calendar-days"></i> Par Date</label>
+                        <div class="input-wrapper">
+                            <input type="date" name="date" value="<?php if(isset($_POST['date'])) echo htmlspecialchars($_POST['date']); ?>">
+                            <button type="submit" name="apply" class="btn-filter">Filtrer</button>
                         </div>
                     </div>
                 </form>
-        <?php
-        }
-        if(isset($_GET['action'], $_GET['id']) AND !empty($_GET['action']) AND !empty($_GET['id'])){ ?>
-            <form method="POST" class="confirmBorrow">
-                <div class="c1">
-                    <p style="background-color: transparent; display: flex;align-items: center">Etes-vous vraiment sur de vouloir refuser ?</p>
-                    <div class="sc1">
-                        <input type="submit" value="supprimer" name="confirmSupp">
-                        <a href="gereremprunt.php">annuler</a>
-                    </div>
+            </div>
+
+            <div class="card table-card">
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Livre</th>
+                                <th>Etudiant</th>
+                                <th>Téléphone</th>
+                                <th>Début</th>
+                                <th>Fin / Statut</th>
+                                <th>État</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                            // Logique de recherche
+                            $getBooks;
+                            if(isset($_POST['research']) && !empty($_POST['search'])){
+                                $getBooks = $bdd->query("SELECT * FROM emprunt WHERE nom_etudiant LIKE '%".htmlspecialchars($_POST['search'])."%' OR numero_etudiant LIKE '%".htmlspecialchars($_POST['search'])."%'");
+                            } elseif(isset($_POST['apply']) && !empty($_POST['date'])){
+                                $getBooks = $bdd->prepare("SELECT * FROM emprunt WHERE date_debut = ? OR date_fin = ?");
+                                $getBooks->execute(array(htmlspecialchars($_POST['date']), htmlspecialchars($_POST['date'])));
+                            } else {
+                                $getBooks = $bdd->query("SELECT * FROM emprunt ORDER BY date_debut DESC");
+                            }
+
+                            if($getBooks->rowCount() > 0){
+                                while($book = $getBooks->fetch()){ 
+                                    // Recup titre livre
+                                    $getnom = $bdd->prepare("SELECT titre_livres FROM livres WHERE ISBN_livres = ?");
+                                    $getnom->execute(array(htmlentities($book["isbn_livres"])));
+                                    $bookTitle = $getnom->fetch()['titre_livres'];
+                        ?> 
+                            <tr>
+                                <td class="fw-bold text-primary">
+                                    <a href="book.php?isbn=<?php echo $book["isbn_livres"]; ?>"><?php echo $bookTitle; ?></a>
+                                </td>
+                                <td><?php echo $book["nom_etudiant"]; ?></td>
+                                <td><?php echo $book["numero_etudiant"]; ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($book["date_debut"])); ?></td>
+                                
+                                <td>
+                                    <?php 
+                                        if($book['isok'] == 'true'){
+                                            $dateFin = new DateTime($book["date_fin"]);
+                                            $todayDate = new DateTime(date("Y/m/d"));
+                                            $interval = $dateFin->diff($todayDate);
+                                            
+                                            if($dateFin == $todayDate){
+                                                echo '<div class="status-warning"><i class="fa fa-triangle-exclamation"></i> Fin aujourd\'hui</div>';
+                                            } elseif($dateFin < $todayDate){
+                                                // Gestion Caution (Logique conservée mais affichage simplifié)
+                                                echo '<div class="status-danger"><i class="fa fa-circle-xmark"></i> Retard: '.$interval->days.'j</div>';
+                                                
+                                                // Update caution logic (Keep it invisible/backend or minimal)
+                                                $getUserCaution = $bdd->prepare("SELECT * FROM caution WHERE mat_etu = ?");
+                                                $getUserCaution->execute(array($book['matricule_etudiant']));
+                                                if($getUserCaution->rowCount() == 0){
+                                                    $AddCaution = $bdd->prepare("INSERT INTO caution(mat_etu, nom_etu, caution, date_dernier_ajout) VALUES(?, ?, ?, CURDATE())");
+                                                    $AddCaution->execute(array($book['matricule_etudiant'], $book["nom_etudiant"], 500*$interval->days));
+                                                } else {
+                                                    $updateCaution = $bdd->prepare("UPDATE caution SET caution = caution* ".$interval->days.", date_dernier_ajout = CURDATE() WHERE mat_etu = ? AND date_dernier_ajout != CURDATE()");
+                                                    $updateCaution->execute(array($book['matricule_etudiant']));
+                                                }
+                                            } else {
+                                                echo '<div class="status-ok">Fin: '.date('d/m/Y', strtotime($book["date_fin"])).'<br><small>Reste '.$interval->days.'j</small></div>';
+                                            }
+                                        } else {
+                                            echo date('d/m/Y', strtotime($book["date_fin"]));
+                                        }
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php if($book['isok'] == 'false'){ ?>
+                                        <span class="badge badge-warning">En attente</span>
+                                    <?php } else { ?>
+                                        <span class="badge badge-success">Actif</span>
+                                    <?php } ?>
+                                </td>
+
+                                <td>
+                                    <div class="action-buttons">
+                                    <?php if($book['isok'] == 'false'){ ?>
+                                        <a href="gereremprunt.php?msg_type=<?php echo sha1($book["id"]); ?>&stu_mat=<?php echo $book["matricule_etudiant"]; ?>" 
+                                           class="btn-icon btn-accept" title="Accepter">
+                                           <i class="fa fa-check"></i>
+                                        </a>
+                                        <a href="gereremprunt.php?action=delete&id=<?php echo sha1($book["id"]); ?>&isbn=<?php echo sha1($book["isbn_livres"]); ?>&nom=<?php echo $book["nom_etudiant"]; ?>&phone=<?php echo $book["numero_etudiant"]; ?>&debut=<?php echo $book["date_debut"]; ?>&fin=<?php echo $book["date_fin"]; ?>" 
+                                           class="btn-icon btn-reject" title="Refuser">
+                                           <i class="fa fa-xmark"></i>
+                                        </a>
+                                    <?php } else { ?>
+                                        <a href="book.php?isbn=<?php echo $book["isbn_livres"]; ?>" class="btn-icon btn-view" title="Voir Livre"><i class="fa fa-eye"></i></a>
+                                        
+                                        <?php
+                                            $endDate = new DateTime($book["date_fin"]);
+                                            $today = new DateTime(date("Y/m/d"));
+                                            $params = "id=".sha1($book["id"])."&isbn=".sha1($book["isbn_livres"])."&nom=".$book["nom_etudiant"]."&phone=".$book["numero_etudiant"]."&debut=".$book["date_debut"]."&fin=".$book["date_fin"];
+                                            
+                                            // Bouton Retour Normal ou avec Caution
+                                            if($today > $endDate){ $params .= "&caution=".$book["id"]; }
+                                        ?>
+                                        <a href="gereremprunt.php?<?php echo $params; ?>" 
+                                           class="btn-icon btn-return" title="Confirmer le retour">
+                                           <i class="fa fa-share-from-square"></i>
+                                        </a>
+                                    <?php } ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php 
+                                }
+                            } else { 
+                        ?>
+                            <tr>
+                                <td colspan="7" class="empty-row">
+                                    <img src="assets/img/undraw_No_data_re_kwbl.png" alt="Vide">
+                                    <p>Aucun emprunt trouvé.</p>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
-        <?php
-        }        
+            </div>
+        </div>
+    </main>
+
+    <?php if((isset($_GET['msg_type']) && !empty($_GET['msg_type'])) || (isset($_GET['id']) && !empty($_GET['id'])) || (isset($_GET['action']) && !empty($_GET['action']))){ 
+        
+        $modalTitle = "Confirmation";
+        $modalMsg = "Êtes-vous sûr ?";
+        $formName = "";
+        $btnClass = "btn-primary";
+        $btnText = "Confirmer";
+
+        if(isset($_GET['msg_type'])){
+            $modalTitle = "Valider l'emprunt";
+            $modalMsg = "Une fois accepté, le stock du livre sera décrémenté.";
+            $formName = "confirmEmprunt";
+            $btnClass = "btn-success";
+        } 
+        elseif(isset($_GET['action']) && $_GET['action'] == 'delete'){
+            $modalTitle = "Refuser la demande";
+            $modalMsg = "Êtes-vous sûr de vouloir refuser cet emprunt ?";
+            $formName = "confirmSupp";
+            $btnClass = "btn-danger";
+            $btnText = "Refuser";
+        }
+        elseif(isset($_GET['id'])){
+            $modalTitle = "Retour de livre";
+            $formName = "confirmReturn";
+            $btnText = "Confirmer le retour";
+            $btnClass = "btn-return-confirm";
+            
+            if(isset($_GET['caution']) && !empty($_GET['caution'])){ 
+                $getCaution = $bdd->prepare("SELECT caution FROM caution WHERE mat_etu IN (SELECT matricule_etudiant FROM emprunt  WHERE id = ?)");
+                $getCaution->execute(array($_GET['caution']));
+                if($getCaution->rowCount() > 0){
+                    $amount = $getCaution->fetch()['caution'];
+                    $modalMsg = "<div class='alert-box danger'><i class='fa fa-money-bill-wave'></i> Retard détecté !</div><br>Assurez-vous de percevoir <b>".$amount." FCFA</b> de pénalité avant de récupérer le livre.";
+                }
+            } else {
+                $modalMsg = "Le livre a-t-il bien été rendu en bon état ?";
+            }
+        }
     ?>
+    <div class="confirmBorrow active-backdrop">
+        <div class="dialog-card">
+            <div class="dialog-icon warning"><i class="fa fa-circle-question"></i></div>
+            <h3><?php echo $modalTitle; ?></h3>
+            <div class="dialog-body-text"><?php echo $modalMsg; ?></div>
+            
+            <form method="POST" class="dialog-actions">
+                <a href="gereremprunt.php" class="btn-ghost">Annuler</a>
+                <input type="submit" value="<?php echo $btnText; ?>" name="<?php echo $formName; ?>" class="<?php echo $btnClass; ?>">
+            </form>
+        </div>
+    </div>
+    <?php } ?>
+
     <script src="js/emprunt.js"></script>
 </body>
 </html>
